@@ -1327,7 +1327,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 <div key={l.id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
                   <div className="flex-1 min-w-0 pr-3">
                     <p className="text-xs font-bold text-slate-700 truncate">{l.codigo_conta} - {l.nome}</p>
-                    <p className="text-[10px] font-bold text-slate-500">{formatBRL(expensesData[l.id] || 0)}</p>
+                    <p className="text-[10px] font-bold text-slate-500">{formatBRL(values?.expensesData?.[l.id] || 0)}</p>
                   </div>
                   {renderOpButtons(systemKpiOps[l.id], (op) => setSystemKpiOps(prev => ({ ...prev, [l.id]: op })))}
                 </div>
@@ -1455,7 +1455,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 <div key={l.id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
                   <div className="flex-1 min-w-0 pr-3">
                     <p className="text-xs font-bold text-slate-700 truncate">{l.codigo_conta} - {l.nome}</p>
-                    <p className="text-[10px] font-bold text-slate-500">{formatBRL(expensesData[l.id] || 0)}</p>
+                    <p className="text-[10px] font-bold text-slate-500">{formatBRL(values?.expensesData?.[l.id] || 0)}</p>
                   </div>
                   {renderOpButtons(systemKpiOps[l.id], (op) => setSystemKpiOps(prev => ({ ...prev, [l.id]: op })))}
                 </div>
