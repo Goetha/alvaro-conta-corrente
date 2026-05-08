@@ -180,43 +180,51 @@ export default function FrotaPerformance() {
             <button onClick={() => setDateFilter({ inicio: '', fim: '' })}
               className="p-0.5 rounded-md hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
               <X size={13} />
-            </button>
-          )}
         </div>
       </div>
 
       {/* ── KPI Summary Cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-
         {/* Faturamento */}
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 shadow-sm">
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 shadow-sm flex flex-col justify-between h-full">
           <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Faturamento Total</p>
-          <p className="text-xl font-black text-emerald-800 leading-tight">{formatBRL(totals.faturamento)}</p>
+          <div>
+            <p className="text-xl font-black text-emerald-800 leading-tight">{formatBRL(totals.faturamento)}</p>
+            <p className="text-[9px] text-emerald-500/80 mt-1">valor bruto acumulado</p>
+          </div>
         </div>
 
         {/* Resultado */}
-        <div className={`bg-gradient-to-br border rounded-2xl p-4 shadow-sm ${totals.resultado >= 0 ? 'from-indigo-50 to-blue-50 border-indigo-100' : 'from-rose-50 to-pink-50 border-rose-100'}`}>
+        <div className={`bg-gradient-to-br border rounded-2xl p-4 shadow-sm flex flex-col justify-between h-full ${totals.resultado >= 0 ? 'from-indigo-50 to-blue-50 border-indigo-100' : 'from-rose-50 to-pink-50 border-rose-100'}`}>
           <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${totals.resultado >= 0 ? 'text-indigo-600' : 'text-rose-600'}`}>Resultado Total</p>
-          <p className={`text-xl font-black leading-tight ${totals.resultado >= 0 ? 'text-indigo-800' : 'text-rose-700'}`}>{formatBRL(totals.resultado)}</p>
+          <div>
+            <p className={`text-xl font-black leading-tight ${totals.resultado >= 0 ? 'text-indigo-800' : 'text-rose-700'}`}>{formatBRL(totals.resultado)}</p>
+            <p className={`text-[9px] mt-1 ${totals.resultado >= 0 ? 'text-indigo-500/80' : 'text-rose-500/80'}`}>lucro operacional bruto</p>
+          </div>
         </div>
 
         {/* Margem */}
-        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-2xl p-4 shadow-sm">
+        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-2xl p-4 shadow-sm flex flex-col justify-between h-full">
           <p className="text-[10px] font-bold text-teal-600 uppercase tracking-wider mb-1">Margem Líquida</p>
-          <p className="text-xl font-black text-teal-800 leading-tight">
-            {totals.faturamento ? pct(totals.resultado, totals.faturamento) : '0%'}
-          </p>
-          <p className="text-[9px] text-teal-500 mt-0.5">sobre faturamento</p>
+          <div>
+            <p className="text-xl font-black text-teal-800 leading-tight">
+              {totals.faturamento ? pct(totals.resultado, totals.faturamento) : '0%'}
+            </p>
+            <p className="text-[9px] text-teal-500/80 mt-1">sobre faturamento</p>
+          </div>
         </div>
 
         {/* Dias */}
-        <div className="bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-2xl p-4 shadow-sm">
+        <div className="bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-2xl p-4 shadow-sm flex flex-col justify-between h-full">
           <p className="text-[10px] font-bold text-violet-600 uppercase tracking-wider mb-1">Dias Acumulados</p>
-          <p className="text-xl font-black text-violet-800 leading-tight">{totals.dias} dias</p>
+          <div>
+            <p className="text-xl font-black text-violet-800 leading-tight">{totals.dias} dias</p>
+            <p className="text-[9px] text-violet-500/80 mt-1">operação da frota</p>
+          </div>
         </div>
 
         {/* Rateio Dinâmico */}
-        <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col justify-between col-span-2 md:col-span-1">
+        <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col justify-between h-full group transition-all hover:border-indigo-300">
           <div className="flex justify-between items-start">
             <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Rateio Dinâmico</p>
             <button
@@ -227,23 +235,22 @@ export default function FrotaPerformance() {
               <Settings size={13} />
             </button>
           </div>
-          <div className="mt-2">
-            <p className="text-xl font-black text-slate-800">{formatBRL(totals.rateio)}</p>
-            <p className="text-[9px] text-slate-500 font-medium mt-0.5">
-              {totals.faturamento ? pct(totals.rateio, totals.faturamento) : '0%'} do fat. · {rateioCodes.length} {rateioCodes.length === 1 ? 'conta' : 'contas'}
+          <div>
+            <p className="text-xl font-black text-slate-800 leading-tight">{formatBRL(totals.rateio)}</p>
+            <p className="text-[9px] text-slate-500/80 font-medium mt-1">
+              {totals.faturamento ? pct(totals.rateio, totals.faturamento) : '0%'} · {rateioCodes.length} contas
             </p>
           </div>
         </div>
-
       </div>
 
       {/* ── Desktop Table (scroll horizontal) ── */}
       <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-md">
         <table className="text-xs border-collapse" style={{ minWidth: '900px', width: '100%' }}>
           <thead>
-            <tr className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white uppercase text-[10px] font-bold tracking-wider">
-              <th className="px-4 py-4 text-left sticky left-0 bg-slate-900 z-10">Placa</th>
-              <th className="px-4 py-4 text-right text-emerald-400">Faturamento</th>
+            <tr className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white uppercase text-[9px] font-bold tracking-wider">
+              <th className="px-3 py-4 text-left sticky left-0 bg-slate-900 z-10 border-r border-slate-700/50">Placa</th>
+              <th className="px-3 py-4 text-right text-emerald-400">Faturamento</th>
               <th className="px-4 py-4 text-right text-amber-300">Abast.</th>
               <th className="px-4 py-4 text-right text-blue-300">Salário</th>
               <th className="px-4 py-4 text-right text-blue-400/70">% Sal.</th>
@@ -266,13 +273,13 @@ export default function FrotaPerformance() {
                 <tr key={s.id}
                   className={`border-b border-slate-100 transition-all duration-150 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'} hover:bg-indigo-50/50`}>
                   {/* Placa */}
-                  <td className="px-4 py-3.5 sticky left-0 bg-inherit border-r border-slate-100 z-10">
+                  <td className="px-3 py-3.5 sticky left-0 bg-inherit border-r border-slate-200 z-10">
                     <div className="flex items-center gap-2">
-                      <span className={`w-1.5 h-7 rounded-full flex-shrink-0 ${pos ? 'bg-emerald-400' : 'bg-rose-400'}`} />
-                      <span className="font-black text-slate-800 tracking-wide font-mono text-sm">{s.placa}</span>
+                      <span className={`w-1 h-6 rounded-full flex-shrink-0 ${pos ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+                      <span className="font-black text-slate-800 tracking-wider font-mono text-xs">{s.placa}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5 text-right font-bold text-emerald-700">{formatBRL(s.faturamento)}</td>
+                  <td className="px-3 py-3.5 text-right font-bold text-emerald-700">{formatBRL(s.faturamento)}</td>
                   {/* Cost cols com % */}
                   {[
                     { v: s.abastecimento, c: 'text-amber-500'  },
