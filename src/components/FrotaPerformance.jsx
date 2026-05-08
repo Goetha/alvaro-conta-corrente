@@ -180,8 +180,11 @@ export default function FrotaPerformance() {
             <button onClick={() => setDateFilter({ inicio: '', fim: '' })}
               className="p-0.5 rounded-md hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
               <X size={13} />
+            </button>
+          )}
         </div>
       </div>
+
 
       {/* ── KPI Summary Cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
