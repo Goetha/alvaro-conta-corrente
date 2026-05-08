@@ -1751,9 +1751,9 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
         agg[linha.id] += receber.reduce((s, r) => s + (Number(r.icms) || 0), 0);
       }
 
-      // Add "Contas a Receber" discounts to the "7 - DESCONTOS" account
+      // Override with "Contas a Receber" discounts for the "7 - DESCONTOS" account to prevent double counting
       if (linha.codigo_conta === '7' || nomeUpper.includes('DESCONTOS')) {
-        agg[linha.id] += receber.reduce((s, r) => s + Math.abs(Number(r.ajustes) || 0), 0);
+        agg[linha.id] = receber.reduce((s, r) => s + Math.abs(Number(r.ajustes) || 0), 0);
       }
     });
 
