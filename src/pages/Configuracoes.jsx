@@ -616,7 +616,7 @@ export default function Configuracoes() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 min-w-0">
         {activeTab === 'plano' && <PlanoContasTab />}
         {activeTab === 'bancos' && <BancosTab />}
         {activeTab === 'parceiros' && <ParceirosTab />}
