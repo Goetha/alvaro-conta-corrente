@@ -25,6 +25,7 @@ import { DreKpiDrawer } from '@/components/lancamentos/DreKpiDrawer';
 import { SalarioDrawer } from '@/components/lancamentos/SalarioDrawer';
 import { ManutencaoDrawer } from '@/components/lancamentos/ManutencaoDrawer';
 import { PedagioDrawer } from '@/components/lancamentos/PedagioDrawer';
+import { useAppSettings } from '@/hooks/useAppSettings';
 
 const PAGE_SIZE = 50;
 const CUSTO_CAPITAL_RATE = 0.01; // 1% ao mês
@@ -1649,14 +1650,17 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const [isEditMode, setIsEditMode] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [sortOrder, setSortOrder] = useState('default');
-  const [excludedCodes, setExcludedCodes] = useState(() => {
-    const saved = localStorage.getItem('dre_excluded_codes');
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  
+  const { settings, isLoading: isSettingsLoading, updateSetting } = useAppSettings();
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const [excludedCodes, setExcludedCodes] = useState(new Set());
 
   useEffect(() => {
-    localStorage.setItem('dre_excluded_codes', JSON.stringify([...excludedCodes]));
-  }, [excludedCodes]);
+    if (isInitialized) {
+      updateSetting('dre_excluded_codes', [...excludedCodes]);
+    }
+  }, [excludedCodes, isInitialized]);
 
   const handleRestore = (tipo) => {
     setExcludedCodes(prev => {
@@ -1953,21 +1957,18 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
 
   // Configuração dos itens automáticos na Geração de Caixa
-  const [systemKpiOps, setSystemKpiOps] = useState(() => {
-    const saved = localStorage.getItem('dre_system_kpi_ops');
-    return saved ? JSON.parse(saved) : {
-      ccBB: 'soma',
-      saldoCaixa: 'soma',
-      aReceber: 'soma',
-      aPagar: 'subtrai',
-      outrasEntradas: 'soma',
-      custoCapital: 'nenhum'
-    };
+  const [systemKpiOps, setSystemKpiOps] = useState({
+    ccBB: 'soma',
+    saldoCaixa: 'soma',
+    aReceber: 'soma',
+    aPagar: 'subtrai',
+    outrasEntradas: 'soma',
+    custoCapital: 'nenhum'
   });
 
   useEffect(() => {
-    localStorage.setItem('dre_system_kpi_ops', JSON.stringify(systemKpiOps));
-  }, [systemKpiOps]);
+    if (isInitialized) updateSetting('dre_system_kpi_ops', systemKpiOps);
+  }, [systemKpiOps, isInitialized]);
 
 
 
@@ -2044,40 +2045,30 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     }, 0);
   }, [lancamentos, caixa]);
 
-  const [descontoDieselManual, setDescontoDieselManual] = useState(() => {
-    const saved = localStorage.getItem('dre_desconto_diesel');
-    return saved ? Number(saved) : 501.36;
-  });
+  const [descontoDieselManual, setDescontoDieselManual] = useState(501.36);
 
   useEffect(() => {
-    localStorage.setItem('dre_desconto_diesel', String(descontoDieselManual));
-  }, [descontoDieselManual]);
+    if (isInitialized) updateSetting('dre_desconto_diesel', descontoDieselManual);
+  }, [descontoDieselManual, isInitialized]);
 
   const kpiResultadoManual = totalReceitasDRE + vendaBensCod6 - totalDespesasDRE + descontoDieselManual;
 
-  const [systemKpiOpsResultado, setSystemKpiOpsResultado] = useState(() => {
-    const saved = localStorage.getItem('dre_system_kpi_ops_resultado_v2');
-    return saved ? JSON.parse(saved) : {
-      receitasTotal: 'soma',
-      vendaBens: 'soma',
-      despesasTotal: 'subtrai',
-      descontoDiesel: 'soma'
-    };
+  const [systemKpiOpsResultado, setSystemKpiOpsResultado] = useState({
+    receitasTotal: 'soma',
+    vendaBens: 'soma',
+    despesasTotal: 'subtrai',
+    descontoDiesel: 'soma'
   });
 
   useEffect(() => {
-    localStorage.setItem('dre_system_kpi_ops_resultado_v2', JSON.stringify(systemKpiOpsResultado));
-  }, [systemKpiOpsResultado]);
+    if (isInitialized) updateSetting('dre_system_kpi_ops_resultado_v2', systemKpiOpsResultado);
+  }, [systemKpiOpsResultado, isInitialized]);
 
-  const [systemKpiOpsReceitas, setSystemKpiOpsReceitas] = useState(() => {
-    const saved = localStorage.getItem('dre_system_kpi_ops_receitas');
-    if (saved) return JSON.parse(saved);
-    return {};
-  });
+  const [systemKpiOpsReceitas, setSystemKpiOpsReceitas] = useState({});
 
   useEffect(() => {
-    localStorage.setItem('dre_system_kpi_ops_receitas', JSON.stringify(systemKpiOpsReceitas));
-  }, [systemKpiOpsReceitas]);
+    if (isInitialized) updateSetting('dre_system_kpi_ops_receitas', systemKpiOpsReceitas);
+  }, [systemKpiOpsReceitas, isInitialized]);
 
   const kpiReceitasDinamico = useMemo(() => {
     const op = systemKpiOpsReceitas || {};
@@ -2107,15 +2098,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const [despesasConfigOpen, setDespesasConfigOpen] = useState(false);
   const [tkszConfigOpen, setTkszConfigOpen] = useState(false);
 
-  const [systemKpiOpsDespesas, setSystemKpiOpsDespesas] = useState(() => {
-    const saved = localStorage.getItem('dre_system_kpi_ops_despesas');
-    if (saved) return JSON.parse(saved);
-    return {};
-  });
+  const [systemKpiOpsDespesas, setSystemKpiOpsDespesas] = useState({});
 
   useEffect(() => {
-    localStorage.setItem('dre_system_kpi_ops_despesas', JSON.stringify(systemKpiOpsDespesas));
-  }, [systemKpiOpsDespesas]);
+    if (isInitialized) updateSetting('dre_system_kpi_ops_despesas', systemKpiOpsDespesas);
+  }, [systemKpiOpsDespesas, isInitialized]);
 
   const kpiDespesasDinamico = useMemo(() => {
     const op = systemKpiOpsDespesas || {};
@@ -2217,15 +2204,26 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const resultadoMaisCusto = kpiResultadoDinamico + custoCapitalTotal;
   const kpiDiferencaFinal = resultadoMaisCusto - geracaoCaixaSoma;
 
-  const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState(() => {
-    const saved = localStorage.getItem('dre_system_kpi_ops_tksz');
-    if (saved) return JSON.parse(saved);
-    return { difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' };
-  });
+  const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState({ difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' });
 
   useEffect(() => {
-    localStorage.setItem('dre_system_kpi_ops_tksz', JSON.stringify(systemKpiOpsTksz));
-  }, [systemKpiOpsTksz]);
+    if (isInitialized) updateSetting('dre_system_kpi_ops_tksz', systemKpiOpsTksz);
+  }, [systemKpiOpsTksz, isInitialized]);
+
+  useEffect(() => {
+    if (!isSettingsLoading && !isInitialized && Object.keys(settings).length > 0) {
+      if (settings.dre_excluded_codes) setExcludedCodes(new Set(settings.dre_excluded_codes));
+      if (settings.dre_system_kpi_ops) setSystemKpiOps(settings.dre_system_kpi_ops);
+      if (settings.dre_desconto_diesel) setDescontoDieselManual(Number(settings.dre_desconto_diesel));
+      if (settings.dre_system_kpi_ops_resultado_v2) setSystemKpiOpsResultado(settings.dre_system_kpi_ops_resultado_v2);
+      if (settings.dre_system_kpi_ops_receitas) setSystemKpiOpsReceitas(settings.dre_system_kpi_ops_receitas);
+      if (settings.dre_system_kpi_ops_despesas) setSystemKpiOpsDespesas(settings.dre_system_kpi_ops_despesas);
+      if (settings.dre_system_kpi_ops_tksz) setSystemKpiOpsTksz(settings.dre_system_kpi_ops_tksz);
+      setIsInitialized(true);
+    } else if (!isSettingsLoading && !isInitialized && Object.keys(settings).length === 0) {
+      setIsInitialized(true);
+    }
+  }, [isSettingsLoading, isInitialized, settings]);
 
   const kpiTkszDinamico = useMemo(() => {
     const op = systemKpiOpsTksz || {};
