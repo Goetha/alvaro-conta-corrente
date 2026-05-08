@@ -1750,6 +1750,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
       if (nomeUpper.includes('ICMS') && agg[linha.id] === 0) {
         agg[linha.id] += receber.reduce((s, r) => s + (Number(r.icms) || 0), 0);
       }
+
+      // Add "Contas a Receber" discounts to the "7 - DESCONTOS" account
+      if (linha.codigo_conta === '7' || nomeUpper.includes('DESCONTOS')) {
+        agg[linha.id] += receber.reduce((s, r) => s + Math.abs(Number(r.ajustes) || 0), 0);
+      }
     });
 
     // Pass 2: Calculate base virtual aggregators (Aportes, Diesel, Faturamento)
