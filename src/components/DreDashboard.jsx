@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip } from 'recharts';
-import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar } from 'lucide-react';
+import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar, AlertTriangle } from 'lucide-react';
 import { useLancamentos, useCreateLancamento, useUpdateLancamento, useDeleteLancamento } from '@/hooks/useLancamentos';
 import { useCaixa, useCreateCaixa, useUpdateCaixa, useDeleteCaixa } from '@/hooks/useCaixa';
 import { useDiesel, useCreateDiesel, useUpdateDiesel, useDeleteDiesel } from '@/hooks/useDiesel';
@@ -1001,7 +1001,7 @@ function GeracaoCaixaConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps
     { key: 'saldoCaixa', label: 'Caixa', val: values?.saldoCaixa },
     { key: 'aReceber', label: 'A Receber (Líquido)', val: values?.aReceberSaldoNet },
     { key: 'aPagar', label: 'A Pagar (Diesel)', val: values?.aPagarSaldo },
-    { key: 'outrasEntradas', label: 'Outras Entradas (5,7,8)', val: values?.outrasEntradas },
+    { key: 'outrasEntradas', label: 'Outras Entradas (5,8)', val: values?.outrasEntradas },
     { key: 'emprestimoFco', label: 'Empréstimo Fco (9)', val: values?.emprestimoFco },
     { key: 'custoCapital', label: 'Custo de Capital', val: values?.custoCapitalTotal },
   ];
@@ -1131,7 +1131,7 @@ function TkszConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, custom
   if (!open) return null;
   const systemItems = [
     { key: 'difFinal', label: 'Diferença Final', val: values?.kpiDiferencaFinal },
-    { key: 'outrasEntradas', label: 'Outras Entradas (5,7,8)', val: values?.outrasEntradas },
+    { key: 'outrasEntradas', label: 'Outras Entradas (5,8)', val: values?.outrasEntradas },
     { key: 'emprestimoFco', label: 'Empréstimo Fco (9)', val: values?.emprestimoFco },
     { key: 'ccBB', label: 'Conta Corrente BB', val: values?.ccBB },
     { key: 'saldoCaixa', label: 'Caixa', val: values?.saldoCaixa },
@@ -1234,7 +1234,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
     { key: 'saldoCaixa', label: 'Caixa', val: values?.saldoCaixa },
     { key: 'aReceber', label: 'A Receber (Líquido)', val: values?.aReceberSaldoNet },
     { key: 'aPagar', label: 'A Pagar (Diesel)', val: values?.aPagarSaldo },
-    { key: 'outrasEntradas', label: 'Outras Entradas (5,7,8)', val: values?.outrasEntradas },
+    { key: 'outrasEntradas', label: 'Outras Entradas (5,8)', val: values?.outrasEntradas },
     { key: 'emprestimoFco', label: 'Empréstimo Fco (9)', val: values?.emprestimoFco },
     { key: 'custoCapital', label: 'Custo de Capital', val: values?.custoCapitalTotal },
   ];
@@ -1362,7 +1362,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
     { key: 'saldoCaixa', label: 'Caixa', val: values?.saldoCaixa },
     { key: 'aReceber', label: 'A Receber (Líquido)', val: values?.aReceberSaldoNet },
     { key: 'aPagar', label: 'A Pagar (Diesel)', val: values?.aPagarSaldo },
-    { key: 'outrasEntradas', label: 'Outras Entradas (5,7,8)', val: values?.outrasEntradas },
+    { key: 'outrasEntradas', label: 'Outras Entradas (5,8)', val: values?.outrasEntradas },
     { key: 'emprestimoFco', label: 'Empréstimo Fco (9)', val: values?.emprestimoFco },
     { key: 'custoCapital', label: 'Custo de Capital', val: values?.custoCapitalTotal },
   ];
@@ -1494,7 +1494,7 @@ function ResultadoConfigDrawer({ open, onClose, systemKpiOpsResultado, setSystem
     { key: 'saldoCaixa', label: 'Caixa', val: values?.saldoCaixa },
     { key: 'aReceber', label: 'A Receber (Líquido)', val: values?.aReceberSaldoNet },
     { key: 'aPagar', label: 'A Pagar (Diesel)', val: values?.aPagarSaldo },
-    { key: 'outrasEntradas', label: 'Outras Entradas (5,7,8)', val: values?.outrasEntradas },
+    { key: 'outrasEntradas', label: 'Outras Entradas (5,8)', val: values?.outrasEntradas },
     { key: 'emprestimoFco', label: 'Empréstimo Fco (9)', val: values?.emprestimoFco },
     { key: 'custoCapital', label: 'Custo de Capital', val: values?.custoCapitalTotal },
   ];
@@ -1718,7 +1718,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   }, [receber]);
 
   const descontos = useMemo(() => {
-    return receber.reduce((s, l) => s + Math.abs(Number(l.ajustes) || 0), 0);
+    // Soma apenas ajustes NEGATIVOS (descontos concedidos)
+    return receber.reduce((s, l) => {
+      const aj = Number(l.ajustes) || 0;
+      return s + (aj < 0 ? Math.abs(aj) : 0);
+    }, 0);
   }, [receber]);
 
   const expensesData = useMemo(() => {
@@ -1735,7 +1739,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
       const codigoString = String(linha.codigo_conta || '');
       const isDiesel = codigoString.includes('55') || nomeUpper.includes('DIESEL');
-      
+
       if (isDiesel) {
         agg[linha.id] = diesel.reduce((s, d) => s + (Number(d.valor_a_pagar) || 0), 0);
       } else if (linha.codigo_conta) {
@@ -1753,11 +1757,6 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
       // Fallback for ICMS if 0
       if (nomeUpper.includes('ICMS') && agg[linha.id] === 0) {
         agg[linha.id] += receber.reduce((s, r) => s + (Number(r.icms) || 0), 0);
-      }
-
-      // Override with "Contas a Receber" discounts for the "7 - DESCONTOS" account to prevent double counting
-      if (linha.codigo_conta === '7' || nomeUpper.includes('DESCONTOS')) {
-        agg[linha.id] = receber.reduce((s, r) => s + Math.abs(Number(r.ajustes) || 0), 0);
       }
     });
 
@@ -2264,20 +2263,346 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     </div>
   );
 
+  const isOk = Math.abs(kpiTkszDinamico) < 0.01;
+
   return (
     <div className="space-y-6">
 
 
+      {/* NOVO BLOCO: Trava Zero Acima das Colunas */}
+      <div className={`w-full p-6 lg:p-8 rounded-3xl shadow-xl border-2 flex flex-col md:flex-row items-center justify-between relative overflow-hidden transition-all duration-500 ${
+        isOk 
+          ? 'bg-green-500 border-green-600 shadow-green-500/20' 
+          : 'bg-rose-500 border-rose-600 shadow-rose-500/20'
+      }`}>
+        <div className={`absolute -right-20 -top-20 opacity-20 blur-3xl w-96 h-96 rounded-full pointer-events-none bg-white`}></div>
+        <div className={`absolute -left-20 -bottom-20 opacity-10 blur-3xl w-64 h-64 rounded-full pointer-events-none bg-white`}></div>
+        
+        <div className="flex items-center gap-4 md:gap-6 relative z-10 w-full md:w-auto">
+          <div className="p-4 rounded-2xl shrink-0 bg-white/20 text-white shadow-inner">
+            {isOk ? <CheckCircle size={36} strokeWidth={2.5} /> : <AlertTriangle size={36} strokeWidth={2.5} />}
+          </div>
+          <div>
+            <h2 className="text-sm md:text-base font-black text-white uppercase tracking-widest flex items-center gap-2 drop-shadow-sm">
+              Trava Zero / Conciliação Final
+              <Settings
+                size={16}
+                className="text-white/70 hover:text-white cursor-pointer transition-colors"
+                onClick={() => setTkszConfigOpen(true)}
+              />
+            </h2>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-wider mt-0.5 text-white/90 drop-shadow-sm">
+              {isOk ? 'Tudo conferido e zerado' : 'Diferença detectada, revise os lançamentos'}
+            </p>
+          </div>
+        </div>
+        
+        <div className="mt-6 md:mt-0 relative z-10 w-full md:w-auto text-center md:text-right">
+          <p className="text-5xl md:text-6xl font-black tracking-tighter drop-shadow-md text-white">
+            {formatBRL(kpiTkszDinamico)}
+          </p>
+        </div>
+      </div>
+
+
+      {/* NOVO BLOCO: Painel de Conferência (Acima de Receitas e Despesas) */}
+      <div className="bg-slate-50 p-6 lg:p-8 rounded-3xl border border-slate-200 shadow-sm mb-6">
+        
+        {(() => {
+const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor || 0), 0);
+              const totalDespesasCard = displayRows.reduce((acc, r) => acc + (r.valor || 0), 0);
+              const valorPlano = totalReceitasDRE - totalDespesasCard;
+              
+              const chartData = [
+                { name: 'Receita', valor: totalReceitasDRE, fill: '#10b981' }, // Verde
+                { name: 'Despesa', valor: -totalDespesasDRE, fill: '#ef4444' }, // Vermelho
+                { name: 'Resultado', valor: kpiResultadoDinamico, fill: kpiResultadoDinamico >= 0 ? '#3b82f6' : '#ef4444' }, // Azul ou Vermelho
+                { name: 'Capital', valor: -custoCapitalTotal, fill: '#f59e0b' }, // Amarelo
+                { name: 'G. Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }, // Verde Escuro
+              ];
+
+              
+          return (
+            <div className="flex flex-col gap-6">
+              
+              {/* Linha 1: Top 4 KPIs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Conta Corrente BB */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-yellow-400 transition-colors group">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-yellow-200 shadow-sm bg-transparent">
+                      <img src="/logos/bb_logo.png" alt="Banco do Brasil" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[8px] font-black uppercase rounded shadow-sm">BB</div>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-700 transition-colors">Conta Corrente</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(ccBB)}</p>
+                </div>
+
+                {/* Saldo Caixa */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-blue-400 transition-colors group">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-blue-100 shadow-sm bg-white">
+                      <img src="/logos/caixa_logo.png" alt="Caixa" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[8px] font-black uppercase rounded shadow-sm">CAIXA</div>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-600 transition-colors">Saldo Caixa</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
+                </div>
+
+                {/* Geração de Caixa */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col relative">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center">
+                      <DollarSign size={20} className="text-teal-600" />
+                    </div>
+                    <Settings size={14} className="text-slate-300 cursor-pointer hover:text-slate-500" onClick={() => setGcConfigOpen(true)} />
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Geração Caixa</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(geracaoCaixaSoma)}</p>
+                </div>
+
+                {/* Diferença */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center">
+                      <Activity size={20} className="text-orange-600" />
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Diferença</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(kpiDiferencaFinal)}</p>
+                </div>
+              </div>
+
+              {/* Linha 2: Gráficos e Detalhes */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                {/* Coluna Esquerda: Gráfico Principal */}
+                <div className="lg:col-span-5 flex flex-col gap-6">
+                  {/* Gráfico de Conferência */}
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Cascata de Resultados</p>
+                    <div className="flex-1 min-h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                          <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
+                          <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                          <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                          <ReferenceLine y={0} stroke="#cbd5e1" />
+                          <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={30}>
+                            {chartData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coluna Central: Fechamento (Diferença) */}
+                <div className="lg:col-span-3 flex flex-col gap-6">
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
+                    
+                    <div className="flex flex-col gap-3 mb-6">
+                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                        <span className="text-[9px] font-black text-orange-600 uppercase">Diferença</span>
+                        <span className="text-[11px] font-black text-slate-800">{formatBRL(kpiDiferencaFinal)}</span>
+                      </div>
+                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                        <span className="text-[9px] font-black text-purple-600 uppercase">Outras Ent.</span>
+                        <span className="text-[11px] font-black text-slate-800">{formatBRL(outrasEntradas)}</span>
+                      </div>
+                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                        <span className="text-[9px] font-black text-amber-500 uppercase">Empréstimos</span>
+                        <span className="text-[11px] font-black text-slate-800">{formatBRL(emprestimoFco)}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 min-h-[140px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart 
+                          data={[
+                            { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#ea580c' },
+                            { name: 'O.E.', valor: outrasEntradas, fill: '#8b5cf6' },
+                            { name: 'Emp.', valor: emprestimoFco, fill: '#f59e0b' }
+                          ]} 
+                          margin={{ top: 0, right: 0, left: -25, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f8fafc" />
+                          <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                          <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
+                          <ReferenceLine y={0} stroke="#e2e8f0" />
+                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
+                            {[0,1,2].map((i) => <Cell key={`cell-${i}`} fill={['#ea580c', '#8b5cf6', '#f59e0b'][i]} />)}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coluna Direita: Gráficos Secundários e KPIs */}
+                <div className="lg:col-span-4 flex flex-col gap-6">
+                  {/* Fluxo de Caixa Futuro */}
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">Fluxo de Caixa Futuro</p>
+                    <div className="flex items-center gap-6">
+                      <div className="w-24 h-24 flex-shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={[
+                                { name: 'A Receber', value: Math.max(0, aReceberSaldoNet), fill: '#10b981' },
+                                { name: 'A Pagar', value: Math.max(0, aPagarSaldo), fill: '#f43f5e' }
+                              ]}
+                              innerRadius={18}
+                              outerRadius={35}
+                              paddingAngle={5}
+                              dataKey="value"
+                              stroke="none"
+                            >
+                              <Cell key="cell-0" fill="#10b981" />
+                              <Cell key="cell-1" fill="#f43f5e" />
+                            </Pie>
+                            <Tooltip formatter={(v) => formatBRL(v)} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#10b981' }}></div>
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">A Receber</span>
+                          </div>
+                          <span className="text-xs font-black" style={{ color: '#059669' }}>{formatBRL(aReceberSaldoNet)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f43f5e' }}></div>
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">A Pagar</span>
+                          </div>
+                          <span className="text-xs font-black" style={{ color: '#e11d48' }}>{formatBRL(aPagarSaldo)}</span>
+                        </div>
+                        <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
+                          <span className="text-[9px] font-black text-slate-400 uppercase">Saldo Previsto</span>
+                          <span className="text-xs font-black text-slate-800">{formatBRL(aReceberSaldoNet - aPagarSaldo)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Composição: Resultado + Custo */}
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo</p>
+                      <Settings
+                        size={14}
+                        className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
+                        onClick={() => setResultadoConfigOpen(true)}
+                      />
+                    </div>
+                    <div className="flex flex-col md:flex-row items-center gap-6">
+                      <div className="w-24 h-24 flex-shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={[
+                                { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
+                                { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' }
+                              ]}
+                              innerRadius={18}
+                              outerRadius={35}
+                              paddingAngle={5}
+                              dataKey="value"
+                              stroke="none"
+                            >
+                              <Cell key="cell-0" fill="#3b82f6" />
+                              <Cell key="cell-1" fill="#f59e0b" />
+                            </Pie>
+                            <Tooltip formatter={(v) => formatBRL(v)} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="flex-1 w-full space-y-3">
+                        <div className="flex justify-between items-center group/kpi1">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">Resultado</span>
+                          </div>
+                          <span className="text-xs font-black text-slate-800">{formatBRL(kpiResultadoDinamico)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">Custo Cap.</span>
+                          </div>
+                          <span className="text-xs font-black text-slate-800">{formatBRL(custoCapitalTotal)}</span>
+                        </div>
+                        <div className="pt-2 border-t border-slate-100 flex justify-between items-center">
+                          <span className="text-[10px] font-black text-indigo-600 uppercase">Total Geral</span>
+                          <span className="text-sm font-black text-indigo-900">{formatBRL(resultadoMaisCusto)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+              {/* Linha 3: Indicadores Secundários e KPIs */}
+              <div className="pt-2 border-t border-slate-200/60 mt-2">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-4">
+                  
+                  {/* KPIs Personalizados (Dinâmico) */}
+                  <div className="lg:col-span-12 flex flex-col">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">KPIs Personalizados</h3>
+                      <button onClick={() => { setEditKpi(null); setKpiDrawerOpen(true); }} className="text-[9px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded-md hover:bg-indigo-100 transition-colors">
+                        <Plus size={10} /> ADD
+                      </button>
+                    </div>
+                    {calculatedCustomKpis.length === 0 ? (
+                      <p className="text-[10px] text-slate-400 italic text-center bg-slate-50 rounded-xl border border-dashed border-slate-200 h-[88px] flex items-center justify-center">Nenhum KPI manual configurado.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        {calculatedCustomKpis.map(k => (
+                          <button key={k.id} onClick={() => { setEditKpi(k); setKpiDrawerOpen(true); }} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-indigo-300 hover:shadow-md transition-all text-left group">
+                            <div className="flex justify-between items-start mb-3 w-full">
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${k.variante === 'success' ? 'bg-emerald-50 border border-emerald-100 group-hover:bg-emerald-100' : k.variante === 'danger' ? 'bg-red-50 border border-red-100 group-hover:bg-red-100' : 'bg-slate-50 border border-slate-100 group-hover:bg-slate-100'}`}>
+                                <Activity size={16} className={`${k.variante === 'success' ? 'text-emerald-600' : k.variante === 'danger' ? 'text-red-600' : 'text-slate-500'}`} />
+                              </div>
+                              <Edit size={12} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
+                            </div>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 truncate w-full group-hover:text-indigo-600 transition-colors">{k.titulo}</p>
+                            <p className={`text-sm font-black tracking-tight ${k.variante === 'success' ? 'text-emerald-700' : k.variante === 'danger' ? 'text-red-700' : 'text-slate-800'}`}>{formatBRL(Number(k.valor) || 0)}</p>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          );
+        })()}
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Bloco Receitas */}
-        <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="bg-emerald-50 px-5 py-4 border-b border-emerald-100 flex items-center justify-between">
+        <div className={`lg:col-span-6 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+          <div className={`px-5 py-4 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
             <div className="flex items-center gap-2">
-              <TrendingUp size={20} className="text-emerald-600" />
-              <h2 className="text-lg font-bold text-emerald-800">Receitas</h2>
+              <TrendingUp size={20} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
+              <h2 className={`text-lg font-bold transition-colors duration-500 ${isOk ? 'text-green-800' : 'text-rose-800'}`}>Receitas</h2>
             </div>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-              <CheckCircle size={11} /> OK
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full transition-colors duration-500 ${isOk ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`}>
+              {isOk ? <CheckCircle size={11} /> : <AlertTriangle size={11} />} {isOk ? 'OK' : 'ERRO'}
             </span>
           </div>
 
@@ -2321,12 +2646,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <span className="text-sm text-slate-700 font-bold tracking-tight">{linha.placa || linha.nome}</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm font-bold text-emerald-600">{formatBRL(val)}</span>
+                        <span className={`text-sm font-bold transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`}>{formatBRL(val)}</span>
                         <span className="text-[10px] font-bold text-slate-400">{pct.toFixed(1)}%</span>
                       </div>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-1.5">
-                      <div className="h-1.5 rounded-full bg-emerald-400 transition-all" style={{ width: `${Math.min(100, pct)}%` }} />
+                      <div className={`h-1.5 rounded-full transition-all duration-500 ${isOk ? 'bg-green-400' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, pct)}%` }} />
                     </div>
                   </div>
                 );
@@ -2337,14 +2662,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
         </div>
 
         {/* Bloco Despesas */}
-        <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="bg-red-50 px-5 py-4 border-b border-red-100 flex items-center justify-between">
+        <div className={`lg:col-span-6 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+          <div className={`px-5 py-4 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
             <div className="flex items-center gap-2">
-              <TrendingDown size={20} className="text-red-600" />
-              <h2 className="text-lg font-bold text-red-800">Despesas</h2>
+              <TrendingDown size={20} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
+              <h2 className={`text-lg font-bold transition-colors duration-500 ${isOk ? 'text-green-800' : 'text-rose-800'}`}>Despesas</h2>
             </div>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-              <CheckCircle size={11} /> OK
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full transition-colors duration-500 ${isOk ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`}>
+              {isOk ? <CheckCircle size={11} /> : <AlertTriangle size={11} />} {isOk ? 'OK' : 'ERRO'}
             </span>
           </div>
 
@@ -2386,7 +2711,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                       <div className="flex items-center gap-2">
                         <button 
                           onClick={() => setExcludedCodes(prev => { const n = new Set(prev); n.add(linha.codigo); return n; })}
-                          className="w-4 h-4 flex items-center justify-center bg-red-50 text-red-500 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+                          className="w-4 h-4 flex items-center justify-center bg-green-50 text-green-600 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-green-500 hover:text-white"
                           title="Ocultar do DRE"
                         >
                           <Minus size={10} />
@@ -2394,10 +2719,10 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <span className="font-mono text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{linha.codigo}</span>
                         <span className="text-sm text-slate-700 font-medium">{linha.nome}</span>
                       </div>
-                      <span className="text-sm font-bold text-red-600">-{formatBRL(val)}</span>
+                      <span className={`text-sm font-bold transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`}>-{formatBRL(val)}</span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-1.5">
-                      <div className="h-1.5 rounded-full bg-red-400 transition-all" style={{ width: `${Math.min(100, pct)}%` }} />
+                      <div className={`h-1.5 rounded-full transition-all duration-500 ${isOk ? 'bg-green-400' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, pct)}%` }} />
                     </div>
                   </div>
                 );
@@ -2407,300 +2732,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
           </div>
         </div>
 
-        {/* Bloco Conferência (Direita) */}
-        <div className="lg:col-span-4 flex flex-col gap-4">
-          <div className="bg-white px-4 py-5 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-4">
-            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider text-center border-b border-slate-100 pb-3">Conferência</h2>
-            
-            {(() => {
-              const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor || 0), 0);
-              const totalDespesasCard = displayRows.reduce((acc, r) => acc + (r.valor || 0), 0);
-              const valorPlano = totalReceitasDRE - totalDespesasCard;
-              
-              const chartData = [
-                { name: 'Receita', valor: totalReceitasDRE, fill: '#10b981' }, // Verde
-                { name: 'Despesa', valor: -totalDespesasDRE, fill: '#ef4444' }, // Vermelho
-                { name: 'Resultado', valor: kpiResultadoDinamico, fill: kpiResultadoDinamico >= 0 ? '#3b82f6' : '#ef4444' }, // Azul ou Vermelho
-                { name: 'Capital', valor: -custoCapitalTotal, fill: '#f59e0b' }, // Amarelo
-                { name: 'G. Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }, // Verde Escuro
-              ];
-
-              return (
-                <div className="space-y-4">
-                  {/* Trava Zero (KPI Principal no Topo) */}
-                  <div className={`p-6 rounded-xl shadow-lg border-2 flex flex-col relative overflow-hidden transition-all duration-300 ${Math.abs(kpiTkszDinamico) < 0.01 ? 'bg-green-500 border-green-600 shadow-green-500/20' : 'bg-red-500 border-red-600 shadow-red-500/20'}`}>
-                    <div className="absolute -right-6 -top-6 opacity-10 pointer-events-none">
-                      <CheckCircle size={100} strokeWidth={1} />
-                    </div>
-                    <div className="flex items-center justify-between mb-2 relative z-10">
-                      <div className="flex items-center gap-2 text-white">
-                        <CheckCircle size={24} className="opacity-90" />
-                        <h2 className="text-[12px] font-black uppercase tracking-widest opacity-90">Trava Zero</h2>
-                      </div>
-                      <Settings
-                        size={16}
-                        className="text-white opacity-70 hover:opacity-100 hover:rotate-90 cursor-pointer transition-all duration-300"
-                        onClick={() => setTkszConfigOpen(true)}
-                      />
-                    </div>
-                    <div className="relative z-10 flex flex-col">
-                      <p className="text-4xl font-black text-white tracking-tighter drop-shadow-sm">{formatBRL(kpiTkszDinamico)}</p>
-                      <p className="text-[10px] font-bold text-white uppercase opacity-80 mt-1">
-                        {Math.abs(kpiTkszDinamico) < 0.01 ? 'TUDO CONFERIDO E ZERADO' : 'DIFERENÇA DETECTADA, REVISE OS LANÇAMENTOS'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Gráfico de Conferência */}
-                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Cascata de Resultados</p>
-                    <div className="h-48">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                          <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
-                          <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                          <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                          <ReferenceLine y={0} stroke="#cbd5e1" />
-                          <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={40}>
-                            {chartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.fill} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  {/* Grid de Contas e Caixa com Branding Oficial */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Conta Corrente BB */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-yellow-400 transition-colors group">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-yellow-200 shadow-sm bg-transparent">
-                          <img 
-                            src="/logos/bb_logo.png" 
-                            alt="Banco do Brasil" 
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                        <div className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[8px] font-black uppercase rounded shadow-sm">BB</div>
-                      </div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-700 transition-colors">Conta Corrente BB</p>
-                      <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(ccBB)}</p>
-                    </div>
-
-                    {/* Saldo Caixa */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-blue-400 transition-colors group">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden border border-blue-100 shadow-sm bg-white">
-                          <img 
-                            src="/logos/caixa_logo.png" 
-                            alt="Caixa" 
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                        <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[8px] font-black uppercase rounded shadow-sm">CAIXA</div>
-                      </div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-600 transition-colors">Saldo Caixa</p>
-                      <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
-                    </div>
-                  </div>
-
-                  {/* Visualização de Composição do Resultado */}
-                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Composição: Resultado + Custo</p>
-                      <div className="flex items-center gap-2">
-                        <Settings
-                          size={14}
-                          className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                          onClick={() => setResultadoConfigOpen(true)}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                      <div className="w-32 h-32 flex-shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={[
-                                { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
-                                { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' }
-                              ]}
-                              innerRadius={25}
-                              outerRadius={45}
-                              paddingAngle={5}
-                              dataKey="value"
-                              stroke="none"
-                            >
-                              <Cell key="cell-0" fill="#3b82f6" />
-                              <Cell key="cell-1" fill="#f59e0b" />
-                            </Pie>
-                            <Tooltip formatter={(v) => formatBRL(v)} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                      
-                      <div className="flex-1 w-full space-y-3">
-                        <div className="flex justify-between items-center group/kpi1">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Resultado</span>
-                          </div>
-                          <span className="text-xs font-black text-slate-800">{formatBRL(kpiResultadoDinamico)}</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Custo de Capital</span>
-                          </div>
-                          <span className="text-xs font-black text-slate-800">{formatBRL(custoCapitalTotal)}</span>
-                        </div>
-                        
-                        <div className="pt-2 border-t border-slate-100 flex justify-between items-center">
-                          <span className="text-[10px] font-black text-indigo-600 uppercase">Total Geral</span>
-                          <span className="text-sm font-black text-indigo-900">{formatBRL(resultadoMaisCusto)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Grid de Caixa e Diferença */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col relative">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center">
-                          <DollarSign size={20} className="text-teal-600" />
-                        </div>
-                        <Settings size={14} className="text-slate-300 cursor-pointer hover:text-slate-500" onClick={() => setGcConfigOpen(true)} />
-                      </div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Geração de Caixa</p>
-                      <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(geracaoCaixaSoma)}</p>
-                    </div>
-
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center">
-                          <Activity size={20} className="text-orange-600" />
-                        </div>
-                      </div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Diferença</p>
-                      <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(kpiDiferencaFinal)}</p>
-                    </div>
-                  </div>
-
-                  {/* Indicadores Auxiliares */}
-                  <div className="grid grid-cols-2 gap-4 mt-2">
-
-                    {/* Fluxo de Caixa Futuro (Composição de Recebíveis e Dívidas) */}
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm col-span-2">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">Fluxo de Caixa Futuro (Pendentes)</p>
-                      <div className="flex items-center gap-6">
-                        <div className="w-24 h-24 flex-shrink-0">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={[
-                                  { name: 'A Receber', value: Math.max(0, aReceberSaldoNet), fill: '#10b981' },
-                                  { name: 'A Pagar', value: Math.max(0, aPagarSaldo), fill: '#f43f5e' }
-                                ]}
-                                innerRadius={18}
-                                outerRadius={35}
-                                paddingAngle={5}
-                                dataKey="value"
-                                stroke="none"
-                              >
-                                <Cell key="cell-0" fill="#10b981" />
-                                <Cell key="cell-1" fill="#f43f5e" />
-                              </Pie>
-                              <Tooltip formatter={(v) => formatBRL(v)} />
-                            </PieChart>
-                          </ResponsiveContainer>
-                        </div>
-                        
-                        <div className="flex-1 space-y-2">
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#10b981' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">A Receber</span>
-                            </div>
-                            <span className="text-xs font-black" style={{ color: '#059669' }}>{formatBRL(aReceberSaldoNet)}</span>
-                          </div>
-                          
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f43f5e' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">A Pagar</span>
-                            </div>
-                            <span className="text-xs font-black" style={{ color: '#e11d48' }}>{formatBRL(aPagarSaldo)}</span>
-                          </div>
-                          
-                          <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
-                            <span className="text-[9px] font-black text-slate-400 uppercase">Saldo Previsto</span>
-                            <span className="text-xs font-black text-slate-800">{formatBRL(aReceberSaldoNet - aPagarSaldo)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 flex items-center justify-center">
-                          <Activity size={16} className="text-purple-600" />
-                        </div>
-                      </div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Outras Entradas</p>
-                      <p className="text-sm font-black text-slate-800">{formatBRL(outrasEntradas)}</p>
-                    </div>
-
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center">
-                          <DollarSign size={16} className="text-orange-600" />
-                        </div>
-                      </div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Empréstimo Fco (9)</p>
-                      <p className="text-sm font-black text-slate-800">{formatBRL(emprestimoFco)}</p>
-                    </div>
-                  </div>
-
-                  {/* KPIs Personalizados */}
-                  <div className="pt-4 border-t border-slate-100 mt-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">KPIs Personalizados</h3>
-                      <button onClick={() => { setEditKpi(null); setKpiDrawerOpen(true); }} className="text-[9px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded-md hover:bg-indigo-100 transition-colors">
-                        <Plus size={10} /> ADD
-                      </button>
-                    </div>
-                    {calculatedCustomKpis.length === 0 ? (
-                      <p className="text-[10px] text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">Nenhum KPI manual.</p>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-4">
-                        {calculatedCustomKpis.map(k => (
-                          <button key={k.id} onClick={() => { setEditKpi(k); setKpiDrawerOpen(true); }} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-indigo-300 hover:shadow-md transition-all text-left group">
-                            <div className="flex justify-between items-start mb-3 w-full">
-                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${k.variante === 'success' ? 'bg-emerald-50 border border-emerald-100' : k.variante === 'danger' ? 'bg-red-50 border border-red-100' : 'bg-slate-50 border border-slate-100'}`}>
-                                <Activity size={16} className={`${k.variante === 'success' ? 'text-emerald-600' : k.variante === 'danger' ? 'text-red-600' : 'text-slate-500'}`} />
-                              </div>
-                              <Edit size={12} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
-                            </div>
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 truncate w-full group-hover:text-indigo-600 transition-colors">{k.titulo}</p>
-                            <p className={`text-sm font-black tracking-tight ${k.variante === 'success' ? 'text-emerald-700' : k.variante === 'danger' ? 'text-red-700' : 'text-slate-800'}`}>{formatBRL(Number(k.valor) || 0)}</p>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-
-      </div>
+              </div>
 
       <TkszConfigDrawer
         open={tkszConfigOpen}

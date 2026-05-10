@@ -1713,7 +1713,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   }, [receber]);
 
   const descontos = useMemo(() => {
-    return receber.reduce((s, l) => s + Math.abs(Number(l.ajustes) || 0), 0);
+    // Soma apenas ajustes NEGATIVOS (descontos concedidos)
+    return receber.reduce((s, l) => {
+      const aj = Number(l.ajustes) || 0;
+      return s + (aj < 0 ? Math.abs(aj) : 0);
+    }, 0);
   }, [receber]);
 
   const expensesData = useMemo(() => {
@@ -1886,13 +1890,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     }, 0);
   }, [custoCapital]);
 
-  // Outras Entradas (contas 5, 7, 8) lendo diretamente dos valores já calculados na tabela DRE (expensesData)
+  // Outras Entradas (contas 5 e 8) — código 7 (DESCONTOS) excluído pois são deduções, não entradas
   const rendimentosValor = useMemo(() => {
     return dreConfig
       .filter(l => {
         const cod = (l.codigo_conta || '').toString().trim();
-        return cod === '5' || cod === '7' || cod === '8' || 
-               cod.startsWith('5.') || cod.startsWith('7.') || cod.startsWith('8.');
+        return cod === '5' || cod === '8' || 
+               cod.startsWith('5.') || cod.startsWith('8.');
       })
       .reduce((s, l) => s + (expensesData[l.id] || 0), 0);
   }, [dreConfig, expensesData]);

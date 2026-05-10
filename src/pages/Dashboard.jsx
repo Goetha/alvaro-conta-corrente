@@ -36,7 +36,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('visao_geral');
   const { data: lancamentos = [], isLoading } = useLancamentos();
   const { data: planoContas = [] } = usePlanoContas();
   const { start: mesStart, end: mesEnd } = currentMonthRange();
@@ -156,28 +155,13 @@ export default function Dashboard() {
         </span>
       </div>
 
-      {/* TABS */}
-      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 w-full max-w-sm">
-        <button
-          onClick={() => setActiveTab('visao_geral')}
-          className={`flex-1 px-4 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider ${
-            activeTab === 'visao_geral' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-          }`}
-        >
-          Visão Geral
-        </button>
-        <button
-          onClick={() => setActiveTab('dre')}
-          className={`flex-1 px-4 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider ${
-            activeTab === 'dre' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-          }`}
-        >
-          DRE e Conferência
-        </button>
-      </div>
+      <div className="flex flex-col gap-8 mt-6">
+        {/* DRE e Conferência inseridos no topo da Visão Geral */}
+        <div className="w-full">
+          <DreDashboard />
+        </div>
 
-      {activeTab === 'visao_geral' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* 1. Fluxo de Caixa - Principal Termômetro */}
         <div className="lg:col-span-12 bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
@@ -433,15 +417,9 @@ export default function Dashboard() {
               })()}
             </div>
           </div>
+          </div>
         </div>
       </div>
-      )}
-
-      {activeTab === 'dre' && (
-        <div className="mt-6">
-          <DreDashboard />
-        </div>
-      )}
     </div>
   );
 }
