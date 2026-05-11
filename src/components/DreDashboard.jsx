@@ -64,14 +64,14 @@ function CustoCapitalView({ data = [], isLoading, onCreate, onUpdate, onDelete }
     const aporte = filtered.reduce((s, l) => s + (Number(l.valor_aporte) || 0), 0);
     const custo = filtered.reduce((s, l) => {
       const dataAporte = parseUTCDate(l.data_aporte);
-      
+
       const diffDays = Math.round((todayUTC - dataAporte) / (1000 * 60 * 60 * 24));
       const periodo = (diffDays + 1) / 30;
       const valorCusto = (Number(l.valor_aporte) || 0) * (Math.pow(1 + taxa, periodo) - 1);
-      
+
       return s - valorCusto;
     }, 0);
-    
+
     return { aporte, custo };
   }, [filtered]);
 
@@ -89,7 +89,7 @@ function CustoCapitalView({ data = [], isLoading, onCreate, onUpdate, onDelete }
           <Plus size={16} /> Novo Aporte
         </button>
       </div>
-      
+
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <input type="text" placeholder="Buscar no histórico..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="w-full max-w-md border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
       </div>
@@ -116,7 +116,7 @@ function CustoCapitalView({ data = [], isLoading, onCreate, onUpdate, onDelete }
                 paginated.map(l => {
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
-                  
+
                   const parseLocalDate = (dateStr) => {
                     if (!dateStr) return new Date();
                     const parts = dateStr.split('-');
@@ -129,7 +129,7 @@ function CustoCapitalView({ data = [], isLoading, onCreate, onUpdate, onDelete }
                   };
 
                   const dataAporte = parseLocalDate(l.data_aporte);
-                  
+
                   const diffDays = Math.round((today - dataAporte) / (1000 * 60 * 60 * 24));
                   const periodo = (diffDays + 1) / 30;
                   const custo = (Number(l.valor_aporte) || 0) * (Math.pow(1 + CUSTO_CAPITAL_RATE, periodo) - 1);
@@ -184,9 +184,9 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
     return data.filter((l) => {
       // Filtro de busca global
       const s = search.toLowerCase();
-      const matchSearch = !s || 
-        (l.historico || '').toLowerCase().includes(s) || 
-        (l.parceiro || '').toLowerCase().includes(s) || 
+      const matchSearch = !s ||
+        (l.historico || '').toLowerCase().includes(s) ||
+        (l.parceiro || '').toLowerCase().includes(s) ||
         (l.numero || '').toLowerCase().includes(s);
 
       // Filtros por coluna (estilo Excel - seleção múltipla)
@@ -201,7 +201,7 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
       const matchTipo = !filterTipo || (filterTipo === 'receita' && (l.receita || 0) > 0) || (filterTipo === 'despesa' && (l.despesa || 0) > 0);
       const matchDataInicio = !dataInicio || l.data >= dataInicio;
       const matchDataFim = !dataFim || l.data <= dataFim;
-      
+
       return matchSearch && matchColumnFilters && matchConta && matchParceiro && matchTipo && matchDataInicio && matchDataFim;
     });
   }, [data, search, columnFilters, filterConta, filterParceiro, filterTipo, dataInicio, dataFim]);
@@ -280,7 +280,7 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
                           >
                             <Filter size={10} />
                           </button>
-                          
+
                           {activeFilter === col.key && (
                             <div className="absolute left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-20 p-2 min-w-[220px]">
                               <div className="flex items-center gap-1.5 border border-slate-200 rounded-md px-2 py-1 bg-white mb-2">
@@ -300,13 +300,13 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
                                   }}
                                 />
                               </div>
-                              
+
                               <div className="max-h-48 overflow-y-auto mb-2 border-t border-slate-50 pt-1">
                                 {(() => {
                                   const allVals = [...new Set(data.map(l => (l[col.key] || '').toString().trim()))].filter(Boolean).sort();
                                   const selected = columnFilters[col.key];
                                   const isAllSelected = selected === null || selected === undefined;
-                                  
+
                                   return (
                                     <div className="space-y-0.5">
                                       <label className="flex items-center gap-2 px-2 py-1 hover:bg-slate-50 rounded cursor-pointer group">
@@ -320,10 +320,10 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
                                         />
                                         <span className="text-[10px] text-slate-700 font-bold">(Selecionar Tudo)</span>
                                       </label>
-                                      
+
                                       {allVals.map((v, idx) => (
-                                        <label 
-                                          key={idx} 
+                                        <label
+                                          key={idx}
                                           data-value={v}
                                           className={`filter-item-${col.key} flex items-center gap-2 px-2 py-1 hover:bg-indigo-50 rounded cursor-pointer group transition-colors`}
                                         >
@@ -332,13 +332,13 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
                                             checked={isAllSelected || (Array.isArray(selected) && selected.includes(v))}
                                             onChange={(e) => {
                                               let newSelected = isAllSelected ? [...allVals] : [...(selected || [])];
-                                              
+
                                               if (e.target.checked) {
                                                 if (!newSelected.includes(v)) newSelected.push(v);
                                               } else {
                                                 newSelected = newSelected.filter(item => item !== v);
                                               }
-                                              
+
                                               // Se selecionou tudo, volta para o estado 'null' (todos)
                                               if (newSelected.length === allVals.length) {
                                                 setColumnFilters({ ...columnFilters, [col.key]: null });
@@ -357,13 +357,13 @@ function LancamentosView({ data = [], isLoading, onCreate, onUpdate, onDelete })
                               </div>
 
                               <div className="flex gap-1 border-t border-slate-100 pt-2">
-                                <button 
+                                <button
                                   onClick={() => setActiveFilter(null)}
                                   className="flex-1 text-center py-1.5 text-[9px] font-bold bg-indigo-600 text-white hover:bg-indigo-700 rounded shadow-sm transition-colors"
                                 >
                                   OK
                                 </button>
-                                <button 
+                                <button
                                   onClick={() => {
                                     setColumnFilters({ ...columnFilters, [col.key]: null });
                                     setActiveFilter(null);
@@ -546,9 +546,9 @@ function ReceberView({ data = [], isLoading, onCreate, onUpdate, onDelete }) {
   const withStats = useMemo(() => {
     return data.filter(l => {
       const s = search.toLowerCase();
-      return !s || 
-        (l.cliente || '').toLowerCase().includes(s) || 
-        (l.pagador || '').toLowerCase().includes(s) || 
+      return !s ||
+        (l.cliente || '').toLowerCase().includes(s) ||
+        (l.pagador || '').toLowerCase().includes(s) ||
         (l.doc_magna || '').toLowerCase().includes(s) ||
         (l.placa || '').toLowerCase().includes(s);
     }).map(l => {
@@ -684,14 +684,14 @@ function SalarioView({ data = [], isLoading, onCreate, onUpdate, onDelete }) {
   const filtered = useMemo(() => {
     return data.filter(l => {
       const s = search.toLowerCase();
-      const matchSearch = !s || 
-        (l.favorecido || '').toLowerCase().includes(s) || 
-        (l.historico || '').toLowerCase().includes(s) || 
+      const matchSearch = !s ||
+        (l.favorecido || '').toLowerCase().includes(s) ||
+        (l.historico || '').toLowerCase().includes(s) ||
         (l.placa || '').toLowerCase().includes(s);
-      
-      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) && 
-                        (!dateRange.fim || l.data <= dateRange.fim);
-      
+
+      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) &&
+        (!dateRange.fim || l.data <= dateRange.fim);
+
       return matchSearch && matchDate;
     });
   }, [data, search, dateRange]);
@@ -783,15 +783,15 @@ function ManutencaoView({ data = [], isLoading, onCreate, onUpdate, onDelete }) 
   const filtered = useMemo(() => {
     return data.filter(l => {
       const s = search.toLowerCase();
-      const matchSearch = !s || 
-        (l.parceiro || '').toLowerCase().includes(s) || 
-        (l.historico || '').toLowerCase().includes(s) || 
+      const matchSearch = !s ||
+        (l.parceiro || '').toLowerCase().includes(s) ||
+        (l.historico || '').toLowerCase().includes(s) ||
         (l.placa || '').toLowerCase().includes(s) ||
         (l.documento || '').toLowerCase().includes(s);
-      
-      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) && 
-                        (!dateRange.fim || l.data <= dateRange.fim);
-      
+
+      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) &&
+        (!dateRange.fim || l.data <= dateRange.fim);
+
       return matchSearch && matchDate;
     });
   }, [data, search, dateRange]);
@@ -885,15 +885,15 @@ function PedagioView({ data = [], isLoading, onCreate, onUpdate, onDelete }) {
   const filtered = useMemo(() => {
     return data.filter(l => {
       const s = search.toLowerCase();
-      const matchSearch = !s || 
-        (l.parceiro || '').toLowerCase().includes(s) || 
-        (l.historico || '').toLowerCase().includes(s) || 
+      const matchSearch = !s ||
+        (l.parceiro || '').toLowerCase().includes(s) ||
+        (l.historico || '').toLowerCase().includes(s) ||
         (l.placa || '').toLowerCase().includes(s) ||
         (l.documento || '').toLowerCase().includes(s);
-      
-      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) && 
-                        (!dateRange.fim || l.data <= dateRange.fim);
-      
+
+      const matchDate = (!dateRange.inicio || l.data >= dateRange.inicio) &&
+        (!dateRange.fim || l.data <= dateRange.fim);
+
       return matchSearch && matchDate;
     });
   }, [data, search, dateRange]);
@@ -1036,7 +1036,7 @@ function GeracaoCaixaConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors"><X size={18} /></button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <section>
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">KPIs do Sistema</h3>
@@ -1051,7 +1051,7 @@ function GeracaoCaixaConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps
                 </div>
               ))}
               {unconfiguredSystemItems.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1077,7 +1077,7 @@ function GeracaoCaixaConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps
                   </div>
                 ))}
                 {unconfiguredCustomKpis.length > 0 && (
-                  <select 
+                  <select
                     className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                     value=""
                     onChange={(e) => { if (e.target.value) updateDreKpi.mutateAsync({ id: e.target.value, operacao_caixa: 'soma' }); }}
@@ -1104,9 +1104,9 @@ function GeracaoCaixaConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps
                   </div>
                 </div>
               ))}
-              
+
               {unconfiguredRows.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1166,7 +1166,7 @@ function TkszConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, custom
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors"><X size={18} /></button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <section>
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">KPIs do Sistema</h3>
@@ -1181,7 +1181,7 @@ function TkszConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, custom
                 </div>
               ))}
               {unconfiguredSystemItems.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1206,7 +1206,7 @@ function TkszConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, custom
                 </div>
               ))}
               {unconfiguredCustomKpis.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1269,7 +1269,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors"><X size={18} /></button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <section>
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">KPIs do Sistema</h3>
@@ -1284,7 +1284,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredSystemItems.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1309,7 +1309,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredCustomKpis.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1334,7 +1334,7 @@ function DespesasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredRows.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1397,7 +1397,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors"><X size={18} /></button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <section>
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">KPIs do Sistema</h3>
@@ -1412,7 +1412,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredSystemItems.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1437,7 +1437,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredCustomKpis.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1462,7 +1462,7 @@ function ReceitasConfigDrawer({ open, onClose, systemKpiOps, setSystemKpiOps, cu
                 </div>
               ))}
               {unconfiguredRows.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOps(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1529,7 +1529,7 @@ function ResultadoConfigDrawer({ open, onClose, systemKpiOpsResultado, setSystem
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors"><X size={18} /></button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <section>
             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">KPIs do Sistema</h3>
@@ -1554,7 +1554,7 @@ function ResultadoConfigDrawer({ open, onClose, systemKpiOpsResultado, setSystem
                 </div>
               ))}
               {unconfiguredSystemItems.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOpsResultado(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1580,7 +1580,7 @@ function ResultadoConfigDrawer({ open, onClose, systemKpiOpsResultado, setSystem
                   </div>
                 ))}
                 {unconfiguredCustomKpis.length > 0 && (
-                  <select 
+                  <select
                     className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                     value=""
                     onChange={(e) => { if (e.target.value) updateDreKpi.mutateAsync({ id: e.target.value, operacao_resultado: 'soma' }); }}
@@ -1607,9 +1607,9 @@ function ResultadoConfigDrawer({ open, onClose, systemKpiOpsResultado, setSystem
                   </div>
                 </div>
               ))}
-              
+
               {unconfiguredRows.length > 0 && (
-                <select 
+                <select
                   className="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm mt-2"
                   value=""
                   onChange={(e) => { if (e.target.value) setSystemKpiOpsResultado(prev => ({ ...prev, [e.target.value]: 'soma' })); }}
@@ -1650,7 +1650,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const [isEditMode, setIsEditMode] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [sortOrder, setSortOrder] = useState('default');
-  
+
   const { settings, isLoading: isSettingsLoading, updateSetting } = useAppSettings();
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -1764,7 +1764,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     dreConfig.forEach(linha => {
       if (!linha.codigo_conta || !linha.codigo_conta.startsWith('VIRTUAL_')) return;
       if (linha.codigo_conta === 'VIRTUAL_TOTAL_DESPESAS' || linha.codigo_conta === 'VIRTUAL_TOTAL_RECEITAS') return;
-      
+
       if (linha.codigo_conta === 'VIRTUAL_FATURAMENTO') {
         agg[linha.id] = faturamento;
       } else if (linha.codigo_conta === 'VIRTUAL_DESCONTOS') {
@@ -1788,7 +1788,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
         const resolveValue = (ref) => {
           if (!ref) return 0;
           if (agg[ref] !== undefined) return Number(agg[ref]) || 0;
-          
+
           if (ref === 'VIRTUAL_TOTAL_RECEITAS') return [...lancamentos, ...caixa].reduce((s, l) => s + (Number(l.receita) || 0), 0);
           if (ref === 'VIRTUAL_FATURAMENTO') return Number(faturamento) || 0;
           if (ref === 'VIRTUAL_DESCONTOS') return Number(descontos) || 0;
@@ -1803,7 +1803,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
         const v1 = resolveValue(linha.id_referencia_1);
         const v2 = resolveValue(linha.id_referencia_2);
         const op = linha.operacao_aritmetica;
-        
+
         if (op === '+') agg[linha.id] = v1 + v2;
         else if (op === '-') agg[linha.id] = v1 - v2;
         else if (op === '*') agg[linha.id] = v1 * v2;
@@ -1845,7 +1845,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const totalDespesasRow = dreConfig.find(l => l.codigo_conta === 'VIRTUAL_TOTAL_DESPESAS');
   const faturamentoRow = dreConfig.find(l => l.codigo_conta === 'VIRTUAL_FATURAMENTO');
-  
+
   const totalDespesas = totalDespesasRow ? (expensesData[totalDespesasRow.id] || 0) : 0;
   const faturamentoValor = faturamentoRow ? (expensesData[faturamentoRow.id] || 0) : faturamento;
   const resultadoLiquidoBase = faturamentoValor - totalDespesas - descontos;
@@ -1867,9 +1867,9 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   // Novos cálculos de KPI solicitados
   const ccBB = lancamentos.reduce((s, l) => s + (Number(l.receita) || 0) - (Number(l.despesa) || 0), 0);
   const saldoCaixa = caixa.reduce((s, l) => s + (Number(l.receita) || 0) - (Number(l.despesa) || 0), 0);
-  const aReceberSaldoNet = receber.reduce((s, l) => 
+  const aReceberSaldoNet = receber.reduce((s, l) =>
     s + (Number(l.valor_a_receber) || 0) - (Number(l.valor_recebido) || 0) + (Number(l.ajustes) || 0)
-  , 0);
+    , 0);
   const aPagarSaldo = diesel.reduce((s, l) => s + (Number(l.valor_a_pagar) || 0) - (Number(l.valor_pago) || 0), 0);
   const custoCapitalTotal = useMemo(() => {
     // Usa data UTC para bater com HOJE() do Excel
@@ -1900,8 +1900,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     return dreConfig
       .filter(l => {
         const cod = (l.codigo_conta || '').toString().trim();
-        return cod === '5' || cod === '7' || cod === '8' || 
-               cod.startsWith('5.') || cod.startsWith('7.') || cod.startsWith('8.');
+        return cod === '5' || cod === '7' || cod === '8' ||
+          cod.startsWith('5.') || cod.startsWith('7.') || cod.startsWith('8.');
       })
       .reduce((s, l) => s + (expensesData[l.id] || 0), 0);
   }, [dreConfig, expensesData]);
@@ -1923,7 +1923,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     return customKpis.map(k => {
       let val = 0;
       const formula = k.formula || {};
-      
+
       const vCC = (formula.ccBB === 'soma' ? ccBB : formula.ccBB === 'subtrai' ? -ccBB : 0) || 0;
       const vCX = (formula.saldoCaixa === 'soma' ? saldoCaixa : formula.saldoCaixa === 'subtrai' ? -saldoCaixa : 0) || 0;
       const vREC = (formula.aReceber === 'soma' ? aReceberSaldoNet : formula.aReceber === 'subtrai' ? -aReceberSaldoNet : 0) || 0;
@@ -1941,7 +1941,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
       }, 0);
 
       val = Number(vCC) + Number(vCX) + Number(vREC) + Number(vPAG) + Number(vOUT) + Number(vEMP) + Number(vCCAP) + Number(rowsSoma);
-      
+
       // Fallback para valor antigo se fórmula estiver vazia
       if (Object.keys(formula).length === 0 && Number(k.valor) !== 0) {
         val = Number(k.valor);
@@ -1975,19 +1975,19 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const displayRows = useMemo(() => {
     // Pegamos as despesas do plano de contas
     const despesasBase = planoContas.filter(p => p.tipo === 'despesa');
-    
+
     // Agrupamos os valores
     const result = despesasBase.map(p => {
       const allMovimentos = [...lancamentos, ...caixa];
       const matched = allMovimentos.filter(l => l.codigo === p.codigo);
       const val = matched.reduce((s, l) => s + (Number(l.despesa) || 0) + (Number(l.receita) || 0), 0);
-      
+
       // Forçamos o Diesel Cavalo (Código 55) a puxar o "A Pagar" da aba Diesel
       let finalVal = val;
       if (p.codigo === '55' || (p.nome || '').toUpperCase().includes('DIESEL')) {
         finalVal = diesel.reduce((s, d) => s + (Number(d.valor_a_pagar) || 0), 0);
       }
-      
+
       return {
         ...p,
         valor: finalVal,
@@ -2071,7 +2071,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const kpiReceitasDinamico = useMemo(() => {
     const op = systemKpiOpsReceitas || {};
-    
+
     const vCC = (op.ccBB === 'soma' ? ccBB : op.ccBB === 'subtrai' ? -ccBB : 0) || 0;
     const vCX = (op.saldoCaixa === 'soma' ? saldoCaixa : op.saldoCaixa === 'subtrai' ? -saldoCaixa : 0) || 0;
     const vREC = (op.aReceber === 'soma' ? aReceberSaldoNet : op.aReceber === 'subtrai' ? -aReceberSaldoNet : 0) || 0;
@@ -2105,7 +2105,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const kpiDespesasDinamico = useMemo(() => {
     const op = systemKpiOpsDespesas || {};
-    
+
     const vCC = (op.ccBB === 'soma' ? ccBB : op.ccBB === 'subtrai' ? -ccBB : 0) || 0;
     const vCX = (op.saldoCaixa === 'soma' ? saldoCaixa : op.saldoCaixa === 'subtrai' ? -saldoCaixa : 0) || 0;
     const vREC = (op.aReceber === 'soma' ? aReceberSaldoNet : op.aReceber === 'subtrai' ? -aReceberSaldoNet : 0) || 0;
@@ -2128,7 +2128,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
       const p = planoContas.find(pc => pc.codigo === l.codigo_conta);
       const isExpense = p?.tipo === 'despesa';
       const currentOp = op[l.id] || (isExpense ? 'soma' : 'nenhum');
-      
+
       if (currentOp === 'soma') return acc + rowVal;
       if (currentOp === 'subtrai') return acc - rowVal;
       return acc;
@@ -2143,7 +2143,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     const vVendB = (op.vendaBens === 'soma' ? vendaBensCod6 : op.vendaBens === 'subtrai' ? -vendaBensCod6 : 0) || 0;
     const vDespTot = (op.despesasTotal === 'soma' ? kpiDespesasDinamico : op.despesasTotal === 'subtrai' ? -kpiDespesasDinamico : 0) || 0;
     const vDescDies = (op.descontoDiesel === 'soma' ? descontoDieselManual : op.descontoDiesel === 'subtrai' ? -descontoDieselManual : 0) || 0;
-    
+
     // Antigos
     const vCC = (op.ccBB === 'soma' ? ccBB : op.ccBB === 'subtrai' ? -ccBB : 0) || 0;
     const vCX = (op.saldoCaixa === 'soma' ? saldoCaixa : op.saldoCaixa === 'subtrai' ? -saldoCaixa : 0) || 0;
@@ -2179,7 +2179,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     const vOUT = (op.outrasEntradas === 'soma' ? outrasEntradas : op.outrasEntradas === 'subtrai' ? -outrasEntradas : 0) || 0;
     const vEMP = (op.emprestimoFco === 'soma' ? emprestimoFco : op.emprestimoFco === 'subtrai' ? -emprestimoFco : 0) || 0;
     const vCCAP = (op.custoCapital === 'soma' ? custoCapitalTotal : op.custoCapital === 'subtrai' ? -custoCapitalTotal : 0) || 0;
-    
+
     const customSoma = calculatedCustomKpis.reduce((s, k) => {
       const opRes = k.operacao_caixa || 'nenhum';
       if (opRes === 'soma') return s + (Number(k.valor) || 0);
@@ -2200,7 +2200,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const chartDataGC = useMemo(() => {
     const op = systemKpiOps || {};
     const items = [];
-    
+
     const addItem = (label, value, operation) => {
       if (operation === 'soma') items.push({ name: label, valor: value, fill: '#10b981' });
       else if (operation === 'subtrai') items.push({ name: label, valor: -value, fill: '#ef4444' });
@@ -2220,8 +2220,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
     const normalRows = dreConfig.filter(l => !l.codigo_conta?.startsWith('VIRTUAL_'));
     normalRows.forEach(l => {
-       const rowVal = expensesData[l.id] || 0;
-       addItem(l.nome, rowVal, op[l.id]);
+      const rowVal = expensesData[l.id] || 0;
+      addItem(l.nome, rowVal, op[l.id]);
     });
 
     return items.filter(i => i.valor !== 0);
@@ -2279,7 +2279,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     const vDifFin = (op.difFinal === 'soma' ? kpiDiferencaFinal : op.difFinal === 'subtrai' ? -kpiDiferencaFinal : 0) || 0;
     const vOUT = (op.outrasEntradas === 'soma' ? outrasEntradas : op.outrasEntradas === 'subtrai' ? -outrasEntradas : 0) || 0;
     const vEMP = (op.emprestimoFco === 'soma' ? emprestimoFco : op.emprestimoFco === 'subtrai' ? -emprestimoFco : 0) || 0;
-    
+
     // Antigos para compatibilidade se quiser adicionar outros
     const vCC = (op.ccBB === 'soma' ? ccBB : op.ccBB === 'subtrai' ? -ccBB : 0) || 0;
     const vCX = (op.saldoCaixa === 'soma' ? saldoCaixa : op.saldoCaixa === 'subtrai' ? -saldoCaixa : 0) || 0;
@@ -2320,14 +2320,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
 
       {/* NOVO BLOCO: Trava Zero Acima das Colunas */}
-      <div className={`w-full p-6 lg:p-8 rounded-3xl shadow-xl border-2 flex flex-col md:flex-row items-center justify-between relative overflow-hidden transition-all duration-500 ${
-        isOk 
-          ? 'bg-green-500 border-green-600 shadow-green-500/20' 
+      <div className={`w-full p-6 lg:p-8 rounded-3xl shadow-xl border-2 flex flex-col md:flex-row items-center justify-between relative overflow-hidden transition-all duration-500 ${isOk
+          ? 'bg-green-500 border-green-600 shadow-green-500/20'
           : 'bg-rose-500 border-rose-600 shadow-rose-500/20'
-      }`}>
+        }`}>
         <div className={`absolute -right-20 -top-20 opacity-20 blur-3xl w-96 h-96 rounded-full pointer-events-none bg-white`}></div>
         <div className={`absolute -left-20 -bottom-20 opacity-10 blur-3xl w-64 h-64 rounded-full pointer-events-none bg-white`}></div>
-        
+
         <div className="flex items-center gap-4 md:gap-6 relative z-10 w-full md:w-auto">
           <div className="p-4 rounded-2xl shrink-0 bg-white/20 text-white shadow-inner">
             {isOk ? <CheckCircle size={36} strokeWidth={2.5} /> : <AlertTriangle size={36} strokeWidth={2.5} />}
@@ -2346,7 +2345,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
             </p>
           </div>
         </div>
-        
+
         <div className="mt-6 md:mt-0 relative z-10 w-full md:w-auto text-center md:text-right">
           <p className="text-5xl md:text-6xl font-black tracking-tighter drop-shadow-md text-white">
             {formatBRL(kpiTkszDinamico)}
@@ -2357,24 +2356,24 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
       {/* NOVO BLOCO: Painel de Conferência (Acima de Receitas e Despesas) */}
       <div className="bg-slate-50 p-6 lg:p-8 rounded-3xl border border-slate-200 shadow-sm mb-6">
-        
-        {(() => {
-const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor || 0), 0);
-              const totalDespesasCard = displayRows.reduce((acc, r) => acc + (r.valor || 0), 0);
-              const valorPlano = totalReceitasDRE - totalDespesasCard;
-              
-              const chartData = [
-                { name: 'Receita', valor: totalReceitasDRE, fill: '#10b981' }, // Verde
-                { name: 'Despesa', valor: -totalDespesasDRE, fill: '#ef4444' }, // Vermelho
-                { name: 'Resultado', valor: kpiResultadoDinamico, fill: kpiResultadoDinamico >= 0 ? '#3b82f6' : '#ef4444' }, // Azul ou Vermelho
-                { name: 'Capital', valor: -custoCapitalTotal, fill: '#f59e0b' }, // Amarelo
-                { name: 'G. Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }, // Verde Escuro
-              ];
 
-              
+        {(() => {
+          const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor || 0), 0);
+          const totalDespesasCard = displayRows.reduce((acc, r) => acc + (r.valor || 0), 0);
+          const valorPlano = totalReceitasDRE - totalDespesasCard;
+
+          const chartData = [
+            { name: 'Receita', valor: totalReceitasDRE, fill: '#10b981' }, // Verde
+            { name: 'Despesa', valor: -totalDespesasDRE, fill: '#ef4444' }, // Vermelho
+            { name: 'Resultado', valor: kpiResultadoDinamico, fill: kpiResultadoDinamico >= 0 ? '#3b82f6' : '#ef4444' }, // Azul ou Vermelho
+            { name: 'Capital', valor: -custoCapitalTotal, fill: '#f59e0b' }, // Amarelo
+            { name: 'G. Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }, // Verde Escuro
+          ];
+
+
           return (
             <div className="flex flex-col gap-6">
-              
+
               {/* Linha 1: Top KPIs */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6">
                 {/* Conta Corrente BB */}
@@ -2406,7 +2405,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
                       <div>
-                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">SALDO A RECEBER ( CONTAS A RECEBER )</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">SALDO ( CONTAS A RECEBER )</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
                       </div>
                     </div>
@@ -2460,15 +2459,15 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     </div>
                     <Settings size={14} className="text-slate-300 cursor-pointer hover:text-teal-600 transition-colors" onClick={() => setGcConfigOpen(true)} />
                   </div>
-                  
+
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     {chartDataGC.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
-                          <XAxis 
-                            dataKey="name" 
-                            axisLine={false} 
-                            tickLine={false} 
+                          <XAxis
+                            dataKey="name"
+                            axisLine={false}
+                            tickLine={false}
                             tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
                             interval={0}
                             tickFormatter={(name) => {
@@ -2477,11 +2476,11 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                               return name;
                             }}
                           />
-                          <Tooltip 
-                            formatter={(val) => [formatBRL(val), 'Valor']} 
+                          <Tooltip
+                            formatter={(val) => [formatBRL(val), 'Valor']}
                             labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
-                            cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
-                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                            cursor={{ fill: 'rgba(241,245,249,0.5)' }}
+                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20} minPointSize={4}>
@@ -2507,22 +2506,22 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartDataDif} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
-                        <XAxis 
-                          dataKey="name" 
-                          axisLine={false} 
-                          tickLine={false} 
+                        <XAxis
+                          dataKey="name"
+                          axisLine={false}
+                          tickLine={false}
                           tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
                           interval={0}
                         />
-                        <Tooltip 
-                          formatter={(val) => [formatBRL(val), 'Valor']} 
+                        <Tooltip
+                          formatter={(val) => [formatBRL(val), 'Valor']}
                           labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
-                          cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
-                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                          cursor={{ fill: 'rgba(241,245,249,0.5)' }}
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                         />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
@@ -2538,7 +2537,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
 
               {/* Linha 2: Gráficos e Detalhes */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
+
                 {/* Coluna Esquerda: Gráfico Principal */}
                 <div className="lg:col-span-5 flex flex-col gap-6">
                   {/* Gráfico de Conferência */}
@@ -2566,80 +2565,80 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 {/* Coluna Direita: Detalhes de Conferência e Fluxo */}
                 <div className="lg:col-span-7 flex flex-col gap-6">
 
-                    {/* Composição: Resultado + Custo + Outros */}
-                    {(() => {
-                      const op = systemKpiOpsResultado || {};
-                      const bars = [];
-                      
-                      // Componentes do Resultado
-                      if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                      if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
-                      if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                      if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
+                  {/* Composição: Resultado + Custo + Outros */}
+                  {(() => {
+                    const op = systemKpiOpsResultado || {};
+                    const bars = [];
 
-                      // Ajustes Fixos (Agora todos verdes se forem positivos)
-                      bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
-                      bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
-                      bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
+                    // Componentes do Resultado
+                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
 
-                      return (
-                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                          <div className="flex items-center justify-between mb-4">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
-                            <Settings
-                              size={14}
-                              className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                              onClick={() => setResultadoConfigOpen(true)}
-                            />
+                    // Ajustes Fixos (Agora todos verdes se forem positivos)
+                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
+                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
+                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
+
+                    return (
+                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
+                          <Settings
+                            size={14}
+                            className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
+                            onClick={() => setResultadoConfigOpen(true)}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-6">
+                          {/* Gráfico Principal (Top) */}
+                          <div className="w-full h-44 -mt-2">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                data={bars}
+                                margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
+                                barGap={2}
+                                barCategoryGap="20%"
+                              >
+                                <XAxis
+                                  dataKey="name"
+                                  axisLine={false}
+                                  tickLine={false}
+                                  tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
+                                  interval={0}
+                                />
+                                <Tooltip
+                                  formatter={(v) => [formatBRL(v), 'Valor']}
+                                  labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
+                                  cursor={{ fill: 'rgba(241,245,249,0.5)' }}
+                                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                                />
+                                <ReferenceLine y={0} stroke="#e2e8f0" />
+                                <Bar dataKey="valor" radius={[2, 2, 0, 0]} minPointSize={4}>
+                                  {bars.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                                  ))}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
                           </div>
-                          <div className="flex flex-col gap-6">
-                            {/* Gráfico Principal (Top) */}
-                            <div className="w-full h-44 -mt-2">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                  data={bars}
-                                  margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
-                                  barGap={2}
-                                  barCategoryGap="20%"
-                                >
-                                  <XAxis 
-                                    dataKey="name" 
-                                    axisLine={false} 
-                                    tickLine={false} 
-                                    tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
-                                    interval={0}
-                                  />
-                                  <Tooltip 
-                                    formatter={(v) => [formatBRL(v), 'Valor']} 
-                                    labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
-                                    cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
-                                  />
-                                  <ReferenceLine y={0} stroke="#e2e8f0" />
-                                  <Bar dataKey="valor" radius={[2, 2, 0, 0]} minPointSize={4}>
-                                    {bars.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                                    ))}
-                                  </Bar>
-                                </BarChart>
-                              </ResponsiveContainer>
-                            </div>
 
-                            {/* Totalizador Consolidado (Agora mais próximo do gráfico) */}
-                            <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
-                                  <div className="flex flex-col">
-                                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
-                                    <span className="text-[12px] font-black text-slate-900 uppercase">Geração de Caixa Consolidada</span>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-lg font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
-                                    <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Conferência OK</span>
-                                  </div>
-                              </div>
+                          {/* Totalizador Consolidado (Agora mais próximo do gráfico) */}
+                          <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
+                            <div className="flex flex-col">
+                              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
+                              <span className="text-[12px] font-black text-slate-900 uppercase">Geração de Caixa Consolidada</span>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <span className="text-lg font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
+                              <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Conferência OK</span>
                             </div>
                           </div>
-                        );
-                      })()}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Fluxo de Caixa Futuro */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
@@ -2694,7 +2693,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
               {/* Linha 3: Indicadores Secundários e KPIs */}
               <div className="pt-2 border-t border-slate-200/60 mt-2">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-4">
-                  
+
                   {/* KPIs Personalizados (Dinâmico) */}
                   <div className="lg:col-span-12 flex flex-col">
                     <div className="flex items-center justify-between mb-3">
@@ -2773,7 +2772,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <div key={linha.id} className="py-2.5 px-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <button 
+                        <button
                           onClick={() => setExcludedCodes(prev => { const n = new Set(prev); n.add(linha.codigo); return n; })}
                           className="w-4 h-4 flex items-center justify-center bg-red-50 text-red-500 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
                           title="Ocultar do DRE"
@@ -2846,7 +2845,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <div key={linha.id} className="py-2.5 px-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <button 
+                        <button
                           onClick={() => setExcludedCodes(prev => { const n = new Set(prev); n.add(linha.codigo); return n; })}
                           className="w-4 h-4 flex items-center justify-center bg-green-50 text-green-600 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-green-500 hover:text-white"
                           title="Ocultar do DRE"
@@ -2869,7 +2868,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
           </div>
         </div>
 
-              </div>
+      </div>
 
       <TkszConfigDrawer
         open={tkszConfigOpen}
@@ -2891,12 +2890,12 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
         dreConfig={dreConfig}
         descontoDieselManual={descontoDieselManual}
         setDescontoDieselManual={setDescontoDieselManual}
-        values={{ 
+        values={{
           receitasTotal: totalReceitasDRE,
           vendaBens: vendaBensCod6,
           despesasTotal: kpiDespesasDinamico,
           descontoDiesel: descontoDieselManual,
-          ccBB, saldoCaixa, aReceberSaldoNet, aPagarSaldo, outrasEntradas, emprestimoFco, custoCapitalTotal, expensesData 
+          ccBB, saldoCaixa, aReceberSaldoNet, aPagarSaldo, outrasEntradas, emprestimoFco, custoCapitalTotal, expensesData
         }}
       />
       <ReceitasConfigDrawer
@@ -2973,12 +2972,12 @@ export function DreDashboard() {
 
   return (
     <DreErrorBoundary>
-      <ResultadoView 
-        receber={receber} 
-        lancamentos={lancamentos} 
-        caixa={caixa} 
-        diesel={diesel} 
-        custoCapital={custoCapital} 
+      <ResultadoView
+        receber={receber}
+        lancamentos={lancamentos}
+        caixa={caixa}
+        diesel={diesel}
+        custoCapital={custoCapital}
       />
     </DreErrorBoundary>
   );
