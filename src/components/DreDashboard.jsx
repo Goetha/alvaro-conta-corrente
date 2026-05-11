@@ -2663,17 +2663,17 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     const bars = [];
                     
                     // 1. Itens da Operação (Configuração)
-                    const valReceita = op.receitasTotal === 'soma' ? totalReceitasDRE : (op.receitasTotal === 'sub' ? -totalReceitasDRE : 0);
-                    const valVenda = op.vendaBens === 'soma' ? vendaBensCod6 : (op.vendaBens === 'sub' ? -vendaBensCod6 : 0);
-                    const valDespesa = op.despesasTotal === 'soma' ? kpiDespesasDinamico : (op.despesasTotal === 'sub' ? -kpiDespesasDinamico : 0);
-                    const valDiesel = op.descontoDiesel === 'soma' ? descontoDieselManual : (op.descontoDiesel === 'sub' ? -descontoDieselManual : 0);
+                    const valReceita = op.receitasTotal === 'soma' ? totalReceitasDRE : (op.receitasTotal === 'subtrai' ? -totalReceitasDRE : 0);
+                    const valVenda = op.vendaBens === 'soma' ? vendaBensCod6 : (op.vendaBens === 'subtrai' ? -vendaBensCod6 : 0);
+                    const valDespesa = op.despesasTotal === 'soma' ? kpiDespesasDinamico : (op.despesasTotal === 'subtrai' ? -kpiDespesasDinamico : 0);
+                    const valDiesel = op.descontoDiesel === 'soma' ? descontoDieselManual : (op.descontoDiesel === 'subtrai' ? -descontoDieselManual : 0);
                     
                     const resultadoOperacional = valReceita + valVenda + valDespesa + valDiesel;
 
-                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.receitasTotal && op.receitasTotal !== 'nenhum' && totalReceitasDRE !== 0) bars.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.vendaBens && op.vendaBens !== 'nenhum' && vendaBensCod6 !== 0) bars.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.despesasTotal && op.despesasTotal !== 'nenhum' && kpiDespesasDinamico !== 0) bars.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum' && descontoDieselManual !== 0) bars.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
 
                     // 2. Barra de Destaque: RESULTADO
                     bars.push({ name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true });
