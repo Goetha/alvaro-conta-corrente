@@ -2233,10 +2233,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
   const kpiDiferencaFinal = resultadoMaisCusto - geracaoCaixaSoma;
   const chartDataDif = useMemo(() => {
     return [
-      { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' }, // Indigo
-      { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }    // Teal
+      { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#10b981' }, // Verde UP
+      { name: 'Livro', valor: -resultadoMaisCusto, fill: '#ef4444' }, // Vermelho DOWN
+      { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#f59e0b' }    // Amarelo UP
     ];
-  }, [resultadoMaisCusto, geracaoCaixaSoma]);
+  }, [resultadoMaisCusto, geracaoCaixaSoma, kpiDiferencaFinal]);
 
   const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState({ difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' });
 
