@@ -2586,7 +2586,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                 { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#f59e0b' },
                                 { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' }
                               ]}
-                              margin={{ top: 10, right: 0, left: 0, bottom: 5 }}
+                              margin={{ top: 10, right: 20, left: 20, bottom: 5 }}
+                              barCategoryGap="25%"
                             >
                               <XAxis 
                                 dataKey="name" 
@@ -2602,7 +2603,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
                               />
                               <ReferenceLine y={0} stroke="#e2e8f0" />
-                              <Bar dataKey="valor" radius={[2, 2, 2, 2]} maxBarSize={20}>
+                              <Bar dataKey="valor" radius={[2, 2, 2, 2]}>
                                 {[0, 1, 2].map((i) => (
                                   <Cell key={`cell-${i}`} fill={['#10b981', '#f59e0b', '#9333ea'][i]} />
                                 ))}
