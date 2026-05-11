@@ -2421,7 +2421,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <LabelList 
                             dataKey="valor" 
                             position="top" 
-                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
@@ -2452,7 +2458,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <LabelList 
                             dataKey="valor" 
                             position="top" 
-                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
@@ -2502,7 +2514,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             <LabelList 
                               dataKey="valor" 
                               position="top" 
-                              formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                              formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            />
+                            <LabelList 
+                              dataKey="valor" 
+                              position="bottom" 
+                              formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                               style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                             />
                             {chartDataGC.map((entry, index) => (
@@ -2550,7 +2568,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <LabelList 
                             dataKey="valor" 
                             position="top" 
-                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataDif.map((entry, index) => (
@@ -2743,7 +2767,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                   <LabelList 
                                     dataKey="valor" 
                                     position="top" 
-                                    formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                                    formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                  />
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="bottom" 
+                                    formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsCaixa.map((entry, index) => (
@@ -2785,7 +2815,13 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                   <LabelList 
                                     dataKey="valor" 
                                     position="top" 
-                                    formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                                    formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                  />
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="bottom" 
+                                    formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsOp.map((entry, index) => (
