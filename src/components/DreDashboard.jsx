@@ -2569,10 +2569,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
                     
                     <div className="flex flex-col gap-3 mb-6">
-                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                        <span className="text-[9px] font-black text-orange-600 uppercase">Diferença</span>
-                        <span className="text-[11px] font-black text-slate-800">{formatBRL(kpiDiferencaFinal)}</span>
-                      </div>
+
                       <div className="flex justify-between items-center pb-2 border-b border-slate-100">
                         <span className="text-[9px] font-black text-purple-600 uppercase">Outras Ent.</span>
                         <span className="text-[11px] font-black text-slate-800">{formatBRL(outrasEntradas)}</span>
@@ -2588,8 +2585,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         <BarChart 
                           data={[
                             { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
-                            { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' },
-                            { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#ea580c' }
+                            { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }
                           ]} 
                           margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
                         >
@@ -2604,7 +2600,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                           <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
-                            {[0,1,2].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e', '#ea580c'][i]} />)}
+                            {[0,1].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e'][i]} />)}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
