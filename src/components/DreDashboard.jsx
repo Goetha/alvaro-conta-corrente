@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList, Sankey } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList, Sankey, Layer } from 'recharts';
 import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar, AlertTriangle } from 'lucide-react';
 import { useLancamentos, useCreateLancamento, useUpdateLancamento, useDeleteLancamento } from '@/hooks/useLancamentos';
 import { useCaixa, useCreateCaixa, useUpdateCaixa, useDeleteCaixa } from '@/hooks/useCaixa';
@@ -2560,15 +2560,35 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <ResponsiveContainer width="100%" height="100%">
                             <Sankey
                               data={sData}
-                              node={{ stroke: '#fff', strokeWidth: 2 }}
-                              link={{ stroke: '#f1f5f9' }}
-                              margin={{ top: 20, left: 10, right: 10, bottom: 20 }}
+                              node={{ stroke: '#fff', strokeWidth: 1 }}
                               nodePadding={50}
+                              margin={{ top: 20, left: 10, right: 150, bottom: 20 }}
+                              link={{ stroke: '#cbd5e1', strokeOpacity: 0.2 }}
                             >
                               <Tooltip 
                                 formatter={(val) => formatBRL(val)}
                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
                               />
+                              {/* Customizing nodes to show labels */}
+                              <Layer>
+                                {sData.nodes.map((node, i) => {
+                                  const { x, y, width, height, index, name } = node;
+                                  const isRight = x > 300;
+                                  return (
+                                    <text
+                                      key={i}
+                                      x={isRight ? x + width + 10 : x - 10}
+                                      y={y + height / 2}
+                                      textAnchor={isRight ? 'start' : 'end'}
+                                      fontSize="10px"
+                                      fontWeight="bold"
+                                      fill="#475569"
+                                    >
+                                      {name}
+                                    </text>
+                                  );
+                                })}
+                              </Layer>
                             </Sankey>
                           </ResponsiveContainer>
                         );
