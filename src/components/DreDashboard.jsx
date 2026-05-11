@@ -2241,9 +2241,9 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const aReceberBruto = useMemo(() => receber.reduce((s, l) => s + (Number(l.valor_a_receber) || 0), 0), [receber]);
   const chartDataReceber = useMemo(() => [
-    { name: 'Bruto', valor: aReceberBruto, fill: '#10b981' },
-    { name: 'Baixas', valor: aReceberSaldoNet - aReceberBruto, fill: '#ef4444' },
-    { name: 'Saldo', valor: aReceberSaldoNet, fill: '#f59e0b' }
+    { name: 'Receita', valor: aReceberBruto, fill: '#10b981' },
+    { name: 'Despesa', valor: aReceberSaldoNet - aReceberBruto, fill: '#ef4444' },
+    { name: 'A Receber', valor: aReceberSaldoNet, fill: '#f59e0b' }
   ], [aReceberBruto, aReceberSaldoNet]);
 
   const aPagarBruto = useMemo(() => diesel.reduce((s, l) => s + (Number(l.valor_a_pagar) || 0), 0), [diesel]);
