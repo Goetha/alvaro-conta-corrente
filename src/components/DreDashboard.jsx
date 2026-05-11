@@ -2719,7 +2719,6 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                     <Cell 
                                       key={index} 
                                       fill={entry.fill} 
-                                      fillOpacity={entry.isTotal ? 1 : 0.7} 
                                       stroke={entry.isTotal ? '#1e293b' : 'transparent'} 
                                       strokeWidth={entry.isTotal ? 2 : 0} 
                                     />
