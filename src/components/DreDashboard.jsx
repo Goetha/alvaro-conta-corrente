@@ -2661,35 +2661,77 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   {(() => {
                     const op = systemKpiOpsResultado || {};
                     const bars = [];
-                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
-                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
-                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
-                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
+                    
+                    // 1. Itens da Operação (Configuração)
+                    const valReceita = op.receitasTotal === 'soma' ? totalReceitasDRE : (op.receitasTotal === 'sub' ? -totalReceitasDRE : 0);
+                    const valVenda = op.vendaBens === 'soma' ? vendaBensCod6 : (op.vendaBens === 'sub' ? -vendaBensCod6 : 0);
+                    const valDespesa = op.despesasTotal === 'soma' ? kpiDespesasDinamico : (op.despesasTotal === 'sub' ? -kpiDespesasDinamico : 0);
+                    const valDiesel = op.descontoDiesel === 'soma' ? descontoDieselManual : (op.descontoDiesel === 'sub' ? -descontoDieselManual : 0);
+                    
+                    const resultadoOperacional = valReceita + valVenda + valDespesa + valDiesel;
+
+                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+
+                    // 2. Barra de Destaque: RESULTADO
+                    bars.push({ name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true });
+
+                    // 3. Outros Ajustes (Fora da Config)
+                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981', type: 'adj' });
+                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981', type: 'adj' });
+                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981', type: 'adj' });
+
+                    const geracaoCaixaFinal = resultadoOperacional + custoCapitalTotal + outrasEntradas + emprestimoFco;
 
                     return (
-                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px]">
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Composição de Caixa</p>
+                      <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px] overflow-hidden">
+                        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fluxo de Caixa Operacional</p>
+                            <h2 className="text-sm font-black text-slate-800">Composição de Caixa</h2>
+                          </div>
                           <Settings size={14} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
                         </div>
-                        <div className="flex-1 w-full min-h-[300px]">
+                        
+                        <div className="flex-1 w-full min-h-[300px] p-5">
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={bars} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                              <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
-                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                              <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                              <XAxis dataKey="name" tick={{ fontSize: 8, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
+                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 8, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                              <Tooltip 
+                                cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} 
+                                formatter={(val) => formatBRL(val)} 
+                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                              />
                               <ReferenceLine y={0} stroke="#cbd5e1" />
-                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={40}>
+                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={35}>
                                 {bars.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.valor >= 0 ? '#10b981' : '#f43f5e'} />
+                                  <Cell 
+                                    key={`cell-${index}`} 
+                                    fill={entry.fill} 
+                                    stroke={entry.isTotal ? '#4f46e5' : 'transparent'}
+                                    strokeWidth={entry.isTotal ? 2 : 0}
+                                    fillOpacity={entry.type === 'adj' ? 0.6 : 1}
+                                  />
                                 ))}
                               </Bar>
                             </BarChart>
                           </ResponsiveContainer>
+                        </div>
+
+                        {/* Rodapé de Resumo com Valores Importantes */}
+                        <div className="bg-slate-50 p-4 border-t border-slate-100 flex flex-col gap-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">Resultado da Operação</span>
+                            <span className="text-sm font-black text-indigo-600 tracking-tight">{formatBRL(resultadoOperacional)}</span>
+                          </div>
+                          <div className="flex justify-between items-center pt-2 border-t border-slate-200/60">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase">Geração de Caixa Final</span>
+                            <span className="text-lg font-black text-slate-900 tracking-tighter">{formatBRL(geracaoCaixaFinal)}</span>
+                          </div>
                         </div>
                       </div>
                     );
