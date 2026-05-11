@@ -2418,20 +2418,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
-                          <LabelList 
-                            dataKey="valor" 
-                            position="top" 
-                            offset={10}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            offset={10}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
+
                           {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
                       </BarChart>
@@ -2457,20 +2444,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
-                          <LabelList 
-                            dataKey="valor" 
-                            position="top" 
-                            offset={10}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            offset={10}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
+
                           {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
                       </BarChart>
@@ -2515,20 +2489,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20} minPointSize={4}>
-                            <LabelList 
-                              dataKey="valor" 
-                              position="top" 
-                              offset={10}
-                              formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                            />
-                            <LabelList 
-                              dataKey="valor" 
-                              position="bottom" 
-                              offset={10}
-                              formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                            />
+
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
@@ -2571,20 +2532,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
-                          <LabelList 
-                            dataKey="valor" 
-                            position="top" 
-                            offset={10}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            offset={10}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
+
                           {chartDataDif.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.fill} />
                           ))}
@@ -2772,20 +2720,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={2} />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="top" 
-                                    offset={10}
-                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="bottom" 
-                                    offset={10}
-                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
+
                                   {barsCaixa.map((entry, index) => (
                                     <Cell 
                                       key={index} 
@@ -2822,20 +2757,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="top" 
-                                    offset={10}
-                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="bottom" 
-                                    offset={10}
-                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
+
                                   {barsOp.map((entry, index) => (
                                     <Cell 
                                       key={index} 
