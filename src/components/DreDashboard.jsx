@@ -30,6 +30,17 @@ import { useAppSettings } from '@/hooks/useAppSettings';
 const PAGE_SIZE = 50;
 const CUSTO_CAPITAL_RATE = 0.01; // 1% ao mês
 
+const formatChartValue = (val) => {
+  const absVal = Math.abs(val);
+  if (absVal >= 1000000) {
+    return `R$ ${(absVal / 1000000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} Mi`;
+  }
+  if (absVal >= 1000) {
+    return `R$ ${(absVal / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`;
+  }
+  return `R$ ${absVal.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+};
+
 function CustoCapitalView({ data = [], isLoading, onCreate, onUpdate, onDelete }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
@@ -2422,14 +2433,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             dataKey="valor" 
                             position="top" 
                             offset={12}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           <LabelList 
                             dataKey="valor" 
                             position="bottom" 
                             offset={12}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
 
@@ -2462,14 +2473,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             dataKey="valor" 
                             position="top" 
                             offset={12}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           <LabelList 
                             dataKey="valor" 
                             position="bottom" 
                             offset={12}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
 
@@ -2521,14 +2532,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               dataKey="valor" 
                               position="top" 
                               offset={12}
-                              formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                              formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                               style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                             />
                             <LabelList 
                               dataKey="valor" 
                               position="bottom" 
                               offset={12}
-                              formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                              formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                               style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                             />
 
@@ -2578,14 +2589,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             dataKey="valor" 
                             position="top" 
                             offset={12}
-                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           <LabelList 
                             dataKey="valor" 
                             position="bottom" 
                             offset={12}
-                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                             style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
 
@@ -2780,14 +2791,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                     dataKey="valor" 
                                     position="top" 
                                     offset={12}
-                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   <LabelList 
                                     dataKey="valor" 
                                     position="bottom" 
                                     offset={12}
-                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
 
@@ -2831,14 +2842,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                     dataKey="valor" 
                                     position="top" 
                                     offset={12}
-                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    formatter={(v) => v > 0 ? formatChartValue(v) : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   <LabelList 
                                     dataKey="valor" 
                                     position="bottom" 
                                     offset={12}
-                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    formatter={(v) => v < 0 ? formatChartValue(v) : ''} 
                                     style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
 
