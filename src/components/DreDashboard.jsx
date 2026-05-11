@@ -2667,8 +2667,6 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         </div>
                       );
                     })()}
-                    </div>
-
 
                   {/* Fluxo de Caixa Futuro */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
