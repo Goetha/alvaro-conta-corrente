@@ -2395,11 +2395,27 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     <Settings size={14} className="text-slate-300 cursor-pointer hover:text-teal-600 transition-colors" onClick={() => setGcConfigOpen(true)} />
                   </div>
                   
-                  <div className="flex-1 mt-2 min-h-[60px] h-16 w-full">
+                  <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     {chartDataGC.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                          <XAxis dataKey="name" hide />
+                        <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                          <XAxis 
+                            dataKey="name" 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
+                            interval={0}
+                            tickFormatter={(name) => {
+                              if (name === 'Conta BB') return 'BB';
+                              if (name === 'Caixa') return 'CX';
+                              if (name === 'A Receber') return 'REC';
+                              if (name === 'A Pagar') return 'PAG';
+                              if (name === 'Outras Ent.') return 'OUT';
+                              if (name === 'Empréstimos') return 'EMP';
+                              if (name === 'Custo Cap.') return 'CAP';
+                              return name.substring(0, 3).toUpperCase();
+                            }}
+                          />
                           <Tooltip 
                             formatter={(val) => [formatBRL(val), 'Valor']} 
                             labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2407,7 +2423,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
-                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={20} minPointSize={4}>
+                          <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20} minPointSize={4}>
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
