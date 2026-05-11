@@ -2241,16 +2241,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const aReceberBruto = useMemo(() => receber.reduce((s, l) => s + (Number(l.valor_a_receber) || 0), 0), [receber]);
   const chartDataReceber = useMemo(() => [
-    { name: 'Receita', valor: aReceberBruto, fill: '#10b981' },
-    { name: 'Despesa', valor: aReceberSaldoNet - aReceberBruto, fill: '#ef4444' },
-    { name: 'A Receber', valor: aReceberSaldoNet, fill: '#f59e0b' }
+    { name: 'Receita', valor: Math.abs(aReceberBruto), fill: '#10b981' },
+    { name: 'Despesa', valor: -Math.abs(aReceberBruto - aReceberSaldoNet), fill: '#ef4444' },
+    { name: 'Saldo', valor: Math.abs(aReceberSaldoNet), fill: '#f59e0b' }
   ], [aReceberBruto, aReceberSaldoNet]);
 
   const aPagarBruto = useMemo(() => diesel.reduce((s, l) => s + (Number(l.valor_a_pagar) || 0), 0), [diesel]);
   const chartDataPagar = useMemo(() => [
-    { name: 'A Pagar', valor: aPagarBruto, fill: '#ef4444' },
-    { name: 'Pago', valor: -(aPagarBruto - aPagarSaldo), fill: '#10b981' },
-    { name: 'Saldo', valor: aPagarSaldo, fill: '#f59e0b' }
+    { name: 'A Pagar', valor: -Math.abs(aPagarBruto), fill: '#ef4444' },
+    { name: 'Pago', valor: Math.abs(aPagarBruto - aPagarSaldo), fill: '#10b981' },
+    { name: 'Saldo', valor: -Math.abs(aPagarSaldo), fill: '#f59e0b' }
   ], [aPagarBruto, aPagarSaldo]);
 
   const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState({ difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' });
@@ -2417,15 +2417,24 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
                             content={(props) => {
                               const { x, y, width, height, value } = props;
-                              if (!value) return null;
+                              if (value === 0) return null;
                               const isNeg = value < 0;
+                              // O Recharts coloca o 'y' no topo da barra (seja ela positiva ou negativa)
+                              // Para barras negativas, y + height é a ponta de baixo.
                               return (
-                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                <text 
+                                  x={x + width/2} 
+                                  y={isNeg ? y + height + 15 : y - 10} 
+                                  fill="#475569" 
+                                  textAnchor="middle" 
+                                  fontSize="9px" 
+                                  fontWeight="800"
+                                >
                                   {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
                                 </text>
                               );
@@ -2455,15 +2464,22 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
                             content={(props) => {
                               const { x, y, width, height, value } = props;
-                              if (!value) return null;
+                              if (value === 0) return null;
                               const isNeg = value < 0;
                               return (
-                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                <text 
+                                  x={x + width/2} 
+                                  y={isNeg ? y + height + 15 : y - 10} 
+                                  fill="#475569" 
+                                  textAnchor="middle" 
+                                  fontSize="9px" 
+                                  fontWeight="800"
+                                >
                                   {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
                                 </text>
                               );
@@ -2512,15 +2528,22 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
-                          <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20} minPointSize={4}>
+                          <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20} minPointSize={4}>
                             <LabelList 
                               dataKey="valor" 
                               content={(props) => {
                                 const { x, y, width, height, value } = props;
-                                if (!value) return null;
+                                if (value === 0) return null;
                                 const isNeg = value < 0;
                                 return (
-                                  <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                  <text 
+                                    x={x + width/2} 
+                                    y={isNeg ? y + height + 15 : y - 10} 
+                                    fill="#475569" 
+                                    textAnchor="middle" 
+                                    fontSize="9px" 
+                                    fontWeight="800"
+                                  >
                                     {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
                                   </text>
                                 );
@@ -2567,15 +2590,22 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                         />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
                             content={(props) => {
                               const { x, y, width, height, value } = props;
-                              if (!value) return null;
+                              if (value === 0) return null;
                               const isNeg = value < 0;
                               return (
-                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                <text 
+                                  x={x + width/2} 
+                                  y={isNeg ? y + height + 15 : y - 10} 
+                                  fill="#475569" 
+                                  textAnchor="middle" 
+                                  fontSize="9px" 
+                                  fontWeight="800"
+                                >
                                   {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
                                 </text>
                               );
