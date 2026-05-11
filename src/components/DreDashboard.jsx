@@ -2537,9 +2537,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                           data={[
                             { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
                             { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' },
-                            { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#ea580c' },
-                            { name: 'O.E.', valor: outrasEntradas, fill: '#8b5cf6' },
-                            { name: 'Emp.', valor: emprestimoFco, fill: '#f59e0b' }
+                            { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#ea580c' }
                           ]} 
                           margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
                         >
@@ -2554,7 +2552,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                           <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
-                            {[0,1,2,3,4].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e', '#ea580c', '#8b5cf6', '#f59e0b'][i]} />)}
+                            {[0,1,2].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e', '#ea580c'][i]} />)}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
