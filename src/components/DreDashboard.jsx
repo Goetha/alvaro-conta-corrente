@@ -2570,15 +2570,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
                       <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
                       
-                      <div className="flex flex-col gap-3 mb-6">
-                        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                          <span className="text-[9px] font-black text-purple-600 uppercase">Outras Ent.</span>
-                          <span className="text-[11px] font-black text-slate-800">{formatBRL(outrasEntradas)}</span>
-                        </div>
-                        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                          <span className="text-[9px] font-black text-amber-500 uppercase">Empréstimos</span>
-                          <span className="text-[11px] font-black text-slate-800">{formatBRL(emprestimoFco)}</span>
-                        </div>
+                      <div className="flex flex-col gap-3 mb-6 invisible h-0 overflow-hidden">
+                        {/* Removidos para o card de Composição a pedido do usuário */}
                       </div>
 
                       <div className="flex-1 min-h-[140px]">
@@ -2608,10 +2601,10 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                       </div>
                     </div>
 
-                    {/* Composição: Resultado + Custo */}
+                    {/* Composição: Resultado + Custo + Outros */}
                     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo + Ajustes</p>
                         <Settings
                           size={14}
                           className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
@@ -2625,7 +2618,9 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                               <Pie
                                 data={[
                                   { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
-                                  { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' }
+                                  { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' },
+                                  { name: 'Outras Ent.', value: Math.max(0, outrasEntradas), fill: '#9333ea' },
+                                  { name: 'Empréstimos', value: Math.max(0, emprestimoFco), fill: '#d97706' }
                                 ]}
                                 innerRadius={18}
                                 outerRadius={35}
@@ -2635,12 +2630,14 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                               >
                                 <Cell key="cell-0" fill="#3b82f6" />
                                 <Cell key="cell-1" fill="#f59e0b" />
+                                <Cell key="cell-2" fill="#9333ea" />
+                                <Cell key="cell-3" fill="#d97706" />
                               </Pie>
                               <Tooltip formatter={(v) => formatBRL(v)} />
                             </PieChart>
                           </ResponsiveContainer>
                         </div>
-                        <div className="flex-1 space-y-2">
+                        <div className="flex-1 space-y-1.5">
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#3b82f6' }}></div>
@@ -2655,9 +2652,23 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                             </div>
                             <span className="text-xs font-black text-amber-600">{formatBRL(custoCapitalTotal)}</span>
                           </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#9333ea' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase">Outras Ent.</span>
+                            </div>
+                            <span className="text-xs font-black text-purple-600">{formatBRL(outrasEntradas)}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase">Empréstimos</span>
+                            </div>
+                            <span className="text-xs font-black text-amber-700">{formatBRL(emprestimoFco)}</span>
+                          </div>
                           <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
                             <span className="text-[9px] font-black text-slate-400 uppercase">Total Comp.</span>
-                            <span className="text-xs font-black text-slate-800">{formatBRL(resultadoMaisCusto)}</span>
+                            <span className="text-xs font-black text-slate-800">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
                           </div>
                         </div>
                       </div>
