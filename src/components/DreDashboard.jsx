@@ -2239,6 +2239,20 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
     ];
   }, [resultadoMaisCusto, geracaoCaixaSoma, kpiDiferencaFinal]);
 
+  const aReceberBruto = useMemo(() => receber.reduce((s, l) => s + (Number(l.valor_a_receber) || 0), 0), [receber]);
+  const chartDataReceber = useMemo(() => [
+    { name: 'Bruto', valor: aReceberBruto, fill: '#10b981' },
+    { name: 'Baixas', valor: aReceberSaldoNet - aReceberBruto, fill: '#ef4444' },
+    { name: 'Saldo', valor: aReceberSaldoNet, fill: '#f59e0b' }
+  ], [aReceberBruto, aReceberSaldoNet]);
+
+  const aPagarBruto = useMemo(() => diesel.reduce((s, l) => s + (Number(l.valor_a_pagar) || 0), 0), [diesel]);
+  const chartDataPagar = useMemo(() => [
+    { name: 'Total', valor: aPagarBruto, fill: '#ef4444' },
+    { name: 'Pago', valor: -(aPagarBruto - aPagarSaldo), fill: '#10b981' },
+    { name: 'Saldo', valor: aPagarSaldo, fill: '#f59e0b' }
+  ], [aPagarBruto, aPagarSaldo]);
+
   const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState({ difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' });
 
   useEffect(() => {
@@ -2387,26 +2401,58 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
                 </div>
 
-                {/* A Receber */}
-                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-emerald-400 transition-colors group">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                      <TrendingUp size={20} className="text-emerald-600" />
+                {/* A Receber (Gráfico) */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-emerald-300 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                        <TrendingUp size={16} className="text-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">A Receber</p>
+                        <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-emerald-600 transition-colors">A Receber</p>
-                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
+                  <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartDataReceber} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
+                        <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
+                        <ReferenceLine y={0} stroke="#e2e8f0" />
+                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
 
-                {/* A Pagar */}
-                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-rose-400 transition-colors group">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center">
-                      <TrendingDown size={20} className="text-rose-600" />
+                {/* A Pagar (Gráfico) */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-rose-300 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
+                        <TrendingDown size={16} className="text-rose-600" />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">A Pagar</p>
+                        <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aPagarSaldo)}</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-rose-600 transition-colors">A Pagar</p>
-                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(aPagarSaldo)}</p>
+                  <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartDataPagar} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
+                        <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
+                        <ReferenceLine y={0} stroke="#e2e8f0" />
+                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
 
                 {/* Geração de Caixa (Agora como Gráfico Detalhado) */}
