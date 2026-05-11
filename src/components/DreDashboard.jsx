@@ -2542,7 +2542,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                 <div className="lg:col-span-5 flex flex-col gap-6">
                   {/* Gráfico de Conferência */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Cascata de Resultados</p>
+                    <p className="text-[10px] font-bold text-slate-900 uppercase mb-3 text-center tracking-wider">Cascata de Resultados</p>
                     <div className="flex-1 min-h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -2584,7 +2584,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     return (
                       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
                         <div className="flex items-center justify-between mb-4">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
+                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
                           <Settings
                             size={14}
                             className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
