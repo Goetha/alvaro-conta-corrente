@@ -2701,7 +2701,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                             <div className="flex items-center gap-2">
                               <Wallet size={14} className="text-slate-600" />
-                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">Fluxo: Composição de Caixa</h2>
+                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">Fluxo: Resultado + Custo de Capital</h2>
                             </div>
                           </div>
                           <div className="h-[220px] p-4">
