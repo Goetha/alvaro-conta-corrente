@@ -2573,7 +2573,10 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         <Settings
                           size={14}
                           className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                                       <div className="flex flex-col gap-6">
+                          onClick={() => setResultadoConfigOpen(true)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-6">
                         {/* Gráfico Principal (Top) */}
                         <div className="w-full h-44 -mt-2">
                           <ResponsiveContainer width="100%" height="100%">
