@@ -2640,53 +2640,6 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     );
                   })()}
 
-                  {/* Fluxo de Caixa Futuro */}
-                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">Fluxo de Caixa Futuro</p>
-                    <div className="flex items-center gap-6">
-                      <div className="w-24 h-24 flex-shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={[
-                                { name: 'A Receber', value: Math.max(0, aReceberSaldoNet), fill: '#10b981' },
-                                { name: 'A Pagar', value: Math.max(0, aPagarSaldo), fill: '#f43f5e' }
-                              ]}
-                              innerRadius={18}
-                              outerRadius={35}
-                              paddingAngle={5}
-                              dataKey="value"
-                              stroke="none"
-                            >
-                              <Cell key="cell-0" fill="#10b981" />
-                              <Cell key="cell-1" fill="#f43f5e" />
-                            </Pie>
-                            <Tooltip formatter={(v) => formatBRL(v)} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#10b981' }}></div>
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">A Receber</span>
-                          </div>
-                          <span className="text-xs font-black" style={{ color: '#059669' }}>{formatBRL(aReceberSaldoNet)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f43f5e' }}></div>
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">A Pagar</span>
-                          </div>
-                          <span className="text-xs font-black" style={{ color: '#e11d48' }}>{formatBRL(aPagarSaldo)}</span>
-                        </div>
-                        <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
-                          <span className="text-[9px] font-black text-slate-400 uppercase">Saldo Previsto</span>
-                          <span className="text-xs font-black text-slate-800">{formatBRL(aReceberSaldoNet - aPagarSaldo)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
