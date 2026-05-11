@@ -2616,7 +2616,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
                                   />
                                   <ReferenceLine y={0} stroke="#e2e8f0" />
-                                  <Bar dataKey="valor" radius={[2, 2, 0, 0]}>
+                                  <Bar dataKey="valor" radius={[2, 2, 0, 0]} minPointSize={4}>
                                     {bars.map((entry, index) => (
                                       <Cell key={`cell-${index}`} fill={entry.fill} />
                                     ))}
