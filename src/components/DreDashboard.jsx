@@ -2672,8 +2672,6 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
               </div>
 
-              </div>
-
               {/* Linha 3: Indicadores Secundários e KPIs */}
               <div className="pt-2 border-t border-slate-200/60 mt-2">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-4">
