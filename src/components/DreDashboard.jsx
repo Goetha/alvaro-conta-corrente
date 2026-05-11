@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar } from 'recharts';
 import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar, AlertTriangle } from 'lucide-react';
 import { useLancamentos, useCreateLancamento, useUpdateLancamento, useDeleteLancamento } from '@/hooks/useLancamentos';
 import { useCaixa, useCreateCaixa, useUpdateCaixa, useDeleteCaixa } from '@/hooks/useCaixa';
