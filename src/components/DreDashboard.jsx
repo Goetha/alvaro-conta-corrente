@@ -2565,41 +2565,6 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
 
                 {/* Coluna Direita: Detalhes de Conferência e Fluxo */}
                 <div className="lg:col-span-7 flex flex-col gap-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Fechamento */}
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
-                      
-                      <div className="flex flex-col gap-3 mb-6 invisible h-0 overflow-hidden">
-                        {/* Removidos para o card de Composição a pedido do usuário */}
-                      </div>
-
-                      <div className="flex-1 min-h-[140px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart 
-                            data={[
-                              { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
-                              { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }
-                            ]} 
-                            margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
-                          >
-                            <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f8fafc" />
-                            <XAxis 
-                              dataKey="name" 
-                              tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} 
-                              axisLine={false} 
-                              tickLine={false} 
-                            />
-                            <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
-                            <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
-                            <ReferenceLine y={0} stroke="#e2e8f0" />
-                            <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
-                              {[0,1].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e'][i]} />)}
-                            </Bar>
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
 
                     {/* Composição: Resultado + Custo + Outros */}
                     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
