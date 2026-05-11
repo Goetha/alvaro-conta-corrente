@@ -2538,8 +2538,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
               {/* Linha 2: Gráficos e Detalhes (Receitas | Despesas | Composição) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* Bloco Receitas (Esquerda - 3/12) */}
-                <div className={`lg:col-span-3 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+                {/* Bloco Receitas (Esquerda - 4/12) */}
+                <div className={`lg:col-span-4 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
                   <div className={`px-4 py-3 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
                     <div className="flex items-center gap-2">
                       <TrendingUp size={16} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
@@ -2584,8 +2584,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                 </div>
 
-                {/* Bloco Despesas (Centro - 3/12) */}
-                <div className={`lg:col-span-3 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+                {/* Bloco Despesas (Centro - 4/12) */}
+                <div className={`lg:col-span-4 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
                   <div className={`px-4 py-3 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
                     <div className="flex items-center gap-2">
                       <TrendingDown size={16} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
@@ -2630,8 +2630,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                 </div>
 
-                {/* Bloco Direita (6/12): Detalhamento da Composição */}
-                <div className="lg:col-span-6 flex flex-col gap-6">
+                {/* Bloco Direita (4/12): Detalhamento da Composição */}
+                <div className="lg:col-span-4 flex flex-col gap-6">
                   {(() => {
                     const op = systemKpiOpsResultado || {};
                     const bars = [];
