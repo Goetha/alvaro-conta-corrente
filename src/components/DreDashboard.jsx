@@ -2561,7 +2561,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             <Sankey
                               data={sData}
                               nodePadding={50}
-                              margin={{ top: 20, left: 60, right: 120, bottom: 20 }}
+                              margin={{ top: 20, left: 100, right: 140, bottom: 20 }}
                               link={{ stroke: '#cbd5e1', strokeOpacity: 0.3 }}
                               node={(props) => {
                                 const { x, y, width, height, index, payload } = props;
