@@ -2563,6 +2563,9 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">Por Placa</h3>
+                      {[...excludedCodes].some(c => planoContas.find(p => p.codigo === c)?.tipo === 'receita') && (
+                        <button onClick={() => handleRestore('receita')} className="text-[9px] font-bold text-indigo-600 hover:underline">Restaurar</button>
+                      )}
                     </div>
                     <div className="divide-y divide-slate-50 max-h-[400px] overflow-y-auto pr-1">
                       {displayReceitasRows.map((linha) => {
@@ -2571,8 +2574,19 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         return (
                           <div key={linha.id} className="py-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-[11px] text-slate-700 font-bold truncate">{linha.placa || linha.nome}</span>
-                              <span className={`text-[11px] font-bold ${isOk ? 'text-green-600' : 'text-rose-600'}`}>{formatBRL(val)}</span>
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <button
+                                  onClick={() => setExcludedCodes(prev => { const n = new Set(prev); n.add(linha.codigo); return n; })}
+                                  className="w-3.5 h-3.5 flex items-center justify-center bg-red-50 text-red-500 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+                                >
+                                  <Minus size={8} />
+                                </button>
+                                <span className="text-[11px] text-slate-700 font-bold truncate">{linha.placa || linha.nome}</span>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span className={`text-[11px] font-bold ${isOk ? 'text-green-600' : 'text-rose-600'}`}>{formatBRL(val)}</span>
+                                <span className="text-[8px] font-bold text-slate-400">{pct.toFixed(1)}%</span>
+                              </div>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-1">
                               <div className={`h-1 rounded-full ${isOk ? 'bg-green-400' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, pct)}%` }} />
@@ -2609,6 +2623,9 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">Plano de Contas</h3>
+                      {[...excludedCodes].some(c => planoContas.find(p => p.codigo === c)?.tipo === 'despesa') && (
+                        <button onClick={() => handleRestore('despesa')} className="text-[9px] font-bold text-indigo-600 hover:underline">Restaurar</button>
+                      )}
                     </div>
                     <div className="divide-y divide-slate-50 max-h-[400px] overflow-y-auto pr-1">
                       {displayRows.map((linha) => {
@@ -2617,7 +2634,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         return (
                           <div key={linha.id} className="py-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-[11px] text-slate-700 font-medium truncate">{linha.nome}</span>
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <button
+                                  onClick={() => setExcludedCodes(prev => { const n = new Set(prev); n.add(linha.codigo); return n; })}
+                                  className="w-3.5 h-3.5 flex items-center justify-center bg-green-50 text-green-600 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-green-500 hover:text-white"
+                                >
+                                  <Minus size={8} />
+                                </button>
+                                <span className="font-mono text-[8px] bg-slate-100 text-slate-600 px-1 py-0.5 rounded">{linha.codigo}</span>
+                                <span className="text-[11px] text-slate-700 font-medium truncate">{linha.nome}</span>
+                              </div>
                               <span className={`text-[11px] font-bold ${isOk ? 'text-green-600' : 'text-rose-600'}`}>-{formatBRL(val)}</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-1">
