@@ -2577,10 +2577,10 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                       if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
                       if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
 
-                      // Ajustes Fixos
-                      bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#f59e0b' });
-                      bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#9333ea' });
-                      bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#b45309' });
+                      // Ajustes Fixos (Agora todos verdes se forem positivos)
+                      bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
+                      bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
+                      bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
 
                       return (
                         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
