@@ -2620,19 +2620,6 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                     {bars.map((entry, index) => (
                                       <Cell key={`cell-${index}`} fill={entry.fill} />
                                     ))}
-                                    <LabelList 
-                                      dataKey="valor" 
-                                      position="top" 
-                                      offset={8}
-                                      formatter={(val) => {
-                                        const abs = Math.abs(val);
-                                        const sign = val < 0 ? '-' : '';
-                                        if (abs >= 1000000) return `${sign}${(abs/1000000).toFixed(1)}M`;
-                                        if (abs >= 1000) return `${sign}${(abs/1000).toFixed(0)}k`;
-                                        return sign + abs.toFixed(0);
-                                      }}
-                                      style={{ fontSize: '8px', fontWeight: '900', fill: '#334155' }}
-                                    />
                                   </Bar>
                                 </BarChart>
                               </ResponsiveContainer>
