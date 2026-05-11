@@ -2691,8 +2691,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     
                     const barsCaixa = [
                       ...rawBarsCaixa.filter(b => b.valor < 0).map(b => ({ ...b, fill: '#f43f5e' })),
-                      ...rawBarsCaixa.filter(b => b.valor >= 0).map(b => ({ ...b, fill: '#10b981' })),
-                      { name: 'FINAL', valor: geracaoCaixaFinal, fill: '#0f172a', isTotal: true }
+                      ...rawBarsCaixa.filter(b => b.valor >= 0).map(b => ({ ...b, fill: '#10b981' }))
                     ];
 
                     return (
