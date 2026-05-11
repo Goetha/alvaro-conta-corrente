@@ -2535,88 +2535,141 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                 </div>
               </div>
 
-              {/* Linha 2: Gráficos e Detalhes */}
+              {/* Linha 2: Gráficos e Detalhes (Receitas | Composição | Despesas) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* Coluna Principal: Detalhes de Conferência e Fluxo */}
-                <div className="lg:col-span-12 flex flex-col gap-6">
+                {/* Bloco Receitas (Esquerda - 3/12) */}
+                <div className={`lg:col-span-3 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+                  <div className={`px-4 py-3 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp size={16} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
+                      <h2 className={`text-sm font-bold transition-colors duration-500 ${isOk ? 'text-green-800' : 'text-rose-800'}`}>Receitas</h2>
+                    </div>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-semibold rounded-full transition-colors duration-500 ${isOk ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`}>
+                      {isOk ? <CheckCircle size={9} /> : <AlertTriangle size={9} />} {isOk ? 'OK' : 'ERRO'}
+                    </span>
+                  </div>
 
-                  {/* Composição: Resultado + Custo + Outros */}
+                  <div className="p-4 flex-1">
+                    <div className="space-y-2 mb-4">
+                      <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-100">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-[9px] uppercase font-bold text-slate-400">Total (Real)</p>
+                          <Settings size={12} className="text-slate-400 hover:text-slate-600 cursor-pointer" onClick={() => setReceitasConfigOpen(true)} />
+                        </div>
+                        <p className="text-xs font-bold text-slate-800">{formatBRL(kpiReceitasDinamico)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">Por Placa</h3>
+                    </div>
+                    <div className="divide-y divide-slate-50 max-h-[400px] overflow-y-auto pr-1">
+                      {displayReceitasRows.map((linha) => {
+                        const val = linha.valor || 0;
+                        const pct = faturamento > 0 ? (val / faturamento) * 100 : 0;
+                        return (
+                          <div key={linha.id} className="py-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[11px] text-slate-700 font-bold truncate">{linha.placa || linha.nome}</span>
+                              <span className={`text-[11px] font-bold ${isOk ? 'text-green-600' : 'text-rose-600'}`}>{formatBRL(val)}</span>
+                            </div>
+                            <div className="w-full bg-slate-100 rounded-full h-1">
+                              <div className={`h-1 rounded-full ${isOk ? 'bg-green-400' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, pct)}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bloco Central (6/12): Detalhamento da Composição */}
+                <div className="lg:col-span-6 flex flex-col gap-6">
                   {(() => {
                     const op = systemKpiOpsResultado || {};
                     const bars = [];
-
-                    // Componentes do Resultado
                     if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
                     if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
                     if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
                     if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
-
-                    // Ajustes Fixos (Agora todos verdes se forem positivos)
                     bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
                     bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
                     bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
 
                     return (
-                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px]">
                         <div className="flex items-center justify-between mb-4">
-                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
-                          <Settings
-                            size={14}
-                            className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                            onClick={() => setResultadoConfigOpen(true)}
-                          />
+                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Composição de Caixa</p>
+                          <Settings size={14} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
                         </div>
-                        <div className="flex flex-col gap-6">
-                          {/* Gráfico Principal (Top) */}
-                          <div className="w-full h-44 -mt-2">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <BarChart
-                                data={bars}
-                                margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
-                                barGap={2}
-                                barCategoryGap="20%"
-                              >
-                                <XAxis
-                                  dataKey="name"
-                                  axisLine={false}
-                                  tickLine={false}
-                                  tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
-                                  interval={0}
-                                />
-                                <Tooltip
-                                  formatter={(v) => [formatBRL(v), 'Valor']}
-                                  labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
-                                  cursor={{ fill: 'rgba(241,245,249,0.5)' }}
-                                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
-                                />
-                                <ReferenceLine y={0} stroke="#e2e8f0" />
-                                <Bar dataKey="valor" radius={[2, 2, 0, 0]} minPointSize={4}>
-                                  {bars.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                                  ))}
-                                </Bar>
-                              </BarChart>
-                            </ResponsiveContainer>
-                          </div>
-
-                          {/* Totalizador Consolidado (Agora mais próximo do gráfico) */}
-                          <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
-                            <div className="flex flex-col">
-                              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
-                              <span className="text-[12px] font-black text-slate-900 uppercase">Geração de Caixa Consolidada</span>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-lg font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
-                              <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Conferência OK</span>
-                            </div>
-                          </div>
+                        <div className="flex-1 w-full min-h-[300px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={bars} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                              <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
+                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                              <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                              <ReferenceLine y={0} stroke="#cbd5e1" />
+                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={40}>
+                                {bars.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={entry.valor >= 0 ? '#10b981' : '#f43f5e'} />
+                                ))}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
                         </div>
                       </div>
                     );
                   })()}
-
                 </div>
+
+                {/* Bloco Despesas (Direita - 3/12) */}
+                <div className={`lg:col-span-3 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
+                  <div className={`px-4 py-3 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
+                    <div className="flex items-center gap-2">
+                      <TrendingDown size={16} className={`transition-colors duration-500 ${isOk ? 'text-green-600' : 'text-rose-600'}`} />
+                      <h2 className={`text-sm font-bold transition-colors duration-500 ${isOk ? 'text-green-800' : 'text-rose-800'}`}>Despesas</h2>
+                    </div>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-semibold rounded-full transition-colors duration-500 ${isOk ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700'}`}>
+                      {isOk ? <CheckCircle size={9} /> : <AlertTriangle size={9} />} {isOk ? 'OK' : 'ERRO'}
+                    </span>
+                  </div>
+
+                  <div className="p-4 flex-1">
+                    <div className="space-y-2 mb-4">
+                      <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-100">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-[9px] uppercase font-bold text-slate-400">Total (Real)</p>
+                          <Settings size={12} className="text-slate-400 hover:text-slate-600 cursor-pointer" onClick={() => setDespesasConfigOpen(true)} />
+                        </div>
+                        <p className="text-xs font-bold text-slate-800">{formatBRL(kpiDespesasDinamico)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">Plano de Contas</h3>
+                    </div>
+                    <div className="divide-y divide-slate-50 max-h-[400px] overflow-y-auto pr-1">
+                      {displayRows.map((linha) => {
+                        const val = linha.valor || 0;
+                        const pct = faturamento > 0 ? (val / faturamento) * 100 : 0;
+                        return (
+                          <div key={linha.id} className="py-2 hover:bg-slate-50 transition-colors rounded-lg group/item">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[11px] text-slate-700 font-medium truncate">{linha.nome}</span>
+                              <span className={`text-[11px] font-bold ${isOk ? 'text-green-600' : 'text-rose-600'}`}>-{formatBRL(val)}</span>
+                            </div>
+                            <div className="w-full bg-slate-100 rounded-full h-1">
+                              <div className={`h-1 rounded-full ${isOk ? 'bg-green-400' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, pct)}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               {/* Linha 3: Indicadores Secundários e KPIs */}
