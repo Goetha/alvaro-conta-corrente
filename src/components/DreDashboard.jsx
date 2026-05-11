@@ -2420,15 +2420,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            position="top" 
-                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            content={(props) => {
+                              const { x, y, width, height, value } = props;
+                              if (!value) return null;
+                              const isNeg = value < 0;
+                              return (
+                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                </text>
+                              );
+                            }}
                           />
                           {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
@@ -2457,15 +2458,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            position="top" 
-                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            content={(props) => {
+                              const { x, y, width, height, value } = props;
+                              if (!value) return null;
+                              const isNeg = value < 0;
+                              return (
+                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                </text>
+                              );
+                            }}
                           />
                           {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
@@ -2513,15 +2515,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20} minPointSize={4}>
                             <LabelList 
                               dataKey="valor" 
-                              position="top" 
-                              formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                            />
-                            <LabelList 
-                              dataKey="valor" 
-                              position="bottom" 
-                              formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                              content={(props) => {
+                                const { x, y, width, height, value } = props;
+                                if (!value) return null;
+                                const isNeg = value < 0;
+                                return (
+                                  <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                    {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                  </text>
+                                );
+                              }}
                             />
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -2567,15 +2570,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            position="top" 
-                            formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
-                          />
-                          <LabelList 
-                            dataKey="valor" 
-                            position="bottom" 
-                            formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            content={(props) => {
+                              const { x, y, width, height, value } = props;
+                              if (!value) return null;
+                              const isNeg = value < 0;
+                              return (
+                                <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#475569" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                </text>
+                              );
+                            }}
                           />
                           {chartDataDif.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -2766,15 +2770,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
                                   <LabelList 
                                     dataKey="valor" 
-                                    position="top" 
-                                    formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="bottom" 
-                                    formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                    content={(props) => {
+                                      const { x, y, width, height, value } = props;
+                                      if (!value) return null;
+                                      const isNeg = value < 0;
+                                      return (
+                                        <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#334155" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                          {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                        </text>
+                                      );
+                                    }}
                                   />
                                   {barsCaixa.map((entry, index) => (
                                     <Cell 
@@ -2814,15 +2819,16 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
                                   <LabelList 
                                     dataKey="valor" 
-                                    position="top" 
-                                    formatter={(v) => v > 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
-                                  />
-                                  <LabelList 
-                                    dataKey="valor" 
-                                    position="bottom" 
-                                    formatter={(v) => v < 0 ? `R$ ${(v / 1000).toFixed(1)}k` : ''} 
-                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                    content={(props) => {
+                                      const { x, y, width, height, value } = props;
+                                      if (!value) return null;
+                                      const isNeg = value < 0;
+                                      return (
+                                        <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#334155" textAnchor="middle" fontSize="9px" fontWeight="800">
+                                          {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
+                                        </text>
+                                      );
+                                    }}
                                   />
                                   {barsOp.map((entry, index) => (
                                     <Cell 
