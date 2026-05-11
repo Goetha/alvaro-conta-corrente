@@ -2687,7 +2687,35 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                     return (
                       <>
-                        {/* CARD 1: RESULTADO OPERACIONAL */}
+                        {/* CARD 1: COMPOSIÇÃO DE CAIXA FINAL */}
+                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                          <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div className="flex items-center gap-2">
+                              <Wallet size={14} className="text-slate-600" />
+                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">Fluxo: Composição de Caixa</h2>
+                            </div>
+                          </div>
+                          <div className="h-[220px] p-4">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={barsCaixa}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
+                                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 7 }} axisLine={false} tickLine={false} />
+                                <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                <ReferenceLine y={0} stroke="#cbd5e1" />
+                                <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
+                                  {barsCaixa.map((entry, index) => <Cell key={index} fill={entry.fill} fillOpacity={entry.opacity || 1} stroke={entry.isTotal ? '#1e293b' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">Geração Final</span>
+                            <span className="text-xs font-black text-slate-900">{formatBRL(geracaoCaixaFinal)}</span>
+                          </div>
+                        </div>
+
+                        {/* CARD 2: RESULTADO OPERACIONAL */}
                         <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
                           <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                             <div className="flex items-center gap-2">
@@ -2713,34 +2741,6 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <div className="px-4 py-2 bg-indigo-50/30 border-t border-slate-100 flex justify-between items-center">
                             <span className="text-[9px] font-bold text-slate-500 uppercase">Resultado</span>
                             <span className="text-xs font-black text-indigo-700">{formatBRL(resultadoOperacional)}</span>
-                          </div>
-                        </div>
-
-                        {/* CARD 2: COMPOSIÇÃO DE CAIXA FINAL */}
-                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-                          <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                            <div className="flex items-center gap-2">
-                              <Wallet size={14} className="text-slate-600" />
-                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">Fluxo: Composição de Caixa</h2>
-                            </div>
-                          </div>
-                          <div className="h-[220px] p-4">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={barsCaixa}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 7 }} axisLine={false} tickLine={false} />
-                                <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                                <ReferenceLine y={0} stroke="#cbd5e1" />
-                                <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
-                                  {barsCaixa.map((entry, index) => <Cell key={index} fill={entry.fill} fillOpacity={entry.opacity || 1} stroke={entry.isTotal ? '#1e293b' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
-                                </Bar>
-                              </BarChart>
-                            </ResponsiveContainer>
-                          </div>
-                          <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">Geração Final</span>
-                            <span className="text-xs font-black text-slate-900">{formatBRL(geracaoCaixaFinal)}</span>
                           </div>
                         </div>
                       </>
