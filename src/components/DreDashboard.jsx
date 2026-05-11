@@ -2362,7 +2362,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
             <div className="flex flex-col gap-6">
               
               {/* Linha 1: Top KPIs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6">
                 {/* Conta Corrente BB */}
                 <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-yellow-400 transition-colors group">
                   <div className="flex justify-between items-start mb-4">
@@ -2385,6 +2385,28 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   </div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-600 transition-colors">Saldo Caixa</p>
                   <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
+                </div>
+
+                {/* A Receber */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-emerald-400 transition-colors group">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                      <TrendingUp size={20} className="text-emerald-600" />
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-emerald-600 transition-colors">A Receber</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
+                </div>
+
+                {/* A Pagar */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-rose-400 transition-colors group">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center">
+                      <TrendingDown size={20} className="text-rose-600" />
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-rose-600 transition-colors">A Pagar</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(aPagarSaldo)}</p>
                 </div>
 
                 {/* Geração de Caixa (Agora como Gráfico Detalhado) */}
