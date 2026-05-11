@@ -2582,9 +2582,9 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                               data={[
-                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#10b981' },
-                                { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#f59e0b' },
-                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' }
+                                { name: 'Res.', valor: kpiResultadoDinamico, fill: '#10b981' },
+                                { name: 'Cap.', valor: custoCapitalTotal, fill: '#f59e0b' },
+                                { name: 'Ajuste', valor: outrasEntradas + emprestimoFco, fill: '#9333ea' }
                               ]}
                               margin={{ top: 10, right: 20, left: 20, bottom: 5 }}
                               barCategoryGap="25%"
@@ -2597,7 +2597,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                 interval={0}
                               />
                               <Tooltip 
-                                formatter={(v) => [formatBRL(Array.isArray(v) ? v[1] - v[0] : v), 'Valor']} 
+                                formatter={(v) => [formatBRL(v), 'Valor']} 
                                 labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
                                 cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
