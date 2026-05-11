@@ -2682,8 +2682,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                     // Dados para o Gráfico 2: CAIXA (FLUXO)
                     const rawBarsCaixa = [
-                      { name: 'Resultado', valor: resultadoOperacional },
-                      { name: 'C. Capital', valor: custoCapitalTotal },
+                      { name: 'Res. + Custo Cap.', valor: resultadoOperacional + custoCapitalTotal },
                       { name: 'Outras Ent.', valor: outrasEntradas },
                       { name: 'Empréstimos', valor: emprestimoFco }
                     ];
