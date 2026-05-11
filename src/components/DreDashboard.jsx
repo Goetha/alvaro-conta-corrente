@@ -2705,10 +2705,10 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           </div>
                           <div className="h-[220px] p-4">
                             <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={barsCaixa}>
+                              <BarChart data={barsCaixa} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} />
+                                <YAxis hide={true} domain={['auto', 'auto']} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
@@ -2716,7 +2716,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                     dataKey="valor" 
                                     position="top" 
                                     formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
-                                    style={{ fontSize: '7px', fontWeight: 'bold', fill: '#64748b' }} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsCaixa.map((entry, index) => (
                                     <Cell 
@@ -2747,10 +2747,10 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           </div>
                           <div className="h-[220px] p-4">
                             <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={barsOp}>
+                              <BarChart data={barsOp} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} />
+                                <YAxis hide={true} domain={['auto', 'auto']} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
@@ -2758,7 +2758,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                     dataKey="valor" 
                                     position="top" 
                                     formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
-                                    style={{ fontSize: '7px', fontWeight: 'bold', fill: '#64748b' }} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsOp.map((entry, index) => (
                                     <Cell 
