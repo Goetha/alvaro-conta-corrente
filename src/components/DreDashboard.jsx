@@ -2635,13 +2635,11 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                     <span className="text-lg font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
                                     <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Conferência OK</span>
                                   </div>
-                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
 
                   {/* Fluxo de Caixa Futuro */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
