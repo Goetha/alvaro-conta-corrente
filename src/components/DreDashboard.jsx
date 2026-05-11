@@ -2552,8 +2552,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             { name: 'G. Caixa', fill: '#0d9488' }
                           ],
                           links: [
-                            { source: 0, target: 1, value: Math.abs(kpiDespesasDinamico) },
-                            { source: 0, target: 2, value: Math.max(0, geracaoCaixaSoma) }
+                            { source: 0, target: 1, value: totalDespesasDRE },
+                            { source: 0, target: 2, value: totalReceitasDRE - totalDespesasDRE }
                           ]
                         };
                         return (
