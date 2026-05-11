@@ -2414,12 +2414,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                             tickFormatter={(name) => {
                               if (name === 'Conta BB') return 'BB';
                               if (name === 'Caixa') return 'CX';
-                              if (name === 'A Receber') return 'REC';
-                              if (name === 'A Pagar') return 'PAG';
-                              if (name === 'Outras Ent.') return 'OUT';
-                              if (name === 'Empréstimos') return 'EMP';
-                              if (name === 'Custo Cap.') return 'CAP';
-                              return name.substring(0, 3).toUpperCase();
+                              return name;
                             }}
                           />
                           <Tooltip 
