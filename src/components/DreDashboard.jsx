@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList, Sankey, Layer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList } from 'recharts';
 import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar, AlertTriangle } from 'lucide-react';
 import { useLancamentos, useCreateLancamento, useUpdateLancamento, useDeleteLancamento } from '@/hooks/useLancamentos';
 import { useCaixa, useCreateCaixa, useUpdateCaixa, useDeleteCaixa } from '@/hooks/useCaixa';
@@ -2538,113 +2538,8 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
               {/* Linha 2: Gráficos e Detalhes */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* Coluna Esquerda: Gráfico Principal */}
-                <div className="lg:col-span-6 flex flex-col gap-6">
-                  {/* Gráfico de Conferência */}
-                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                    <p className="text-[10px] font-bold text-slate-900 uppercase mb-3 text-center tracking-wider">Fluxo de Resultados (Sankey)</p>
-                    <div className="flex-1 min-h-[250px] py-4">
-                      {(() => {
-                        const sData = {
-                          nodes: [
-                            { name: 'Receita (Placas)', fill: '#10b981' },
-                            { name: 'Venda Bens', fill: '#34d399' },
-                            { name: 'O. Entradas', fill: '#6ee7b7' },
-                            { name: 'Empréstimos', fill: '#a7f3d0' },
-                            { name: 'Despesas', fill: '#f43f5e' },
-                            { name: 'D. Diesel', fill: '#fb7185' },
-                            { name: 'C. Capital', fill: '#facc15' },
-                            { name: 'G. Caixa', fill: '#0d9488' }
-                          ],
-                          links: (() => {
-                            const sources = [
-                              { id: 0, val: totalReceitasDRE },
-                              { id: 1, val: vendaBensCod6 },
-                              { id: 2, val: outrasEntradas },
-                              { id: 3, val: emprestimoFco }
-                            ].filter(s => s.val > 0);
-
-                            const totalIn = sources.reduce((s, x) => s + x.val, 0);
-                            const despVal = Math.abs(kpiDespesasDinamico);
-                            const diesVal = Math.abs(descontoDieselManual);
-                            const capVal = Math.abs(custoCapitalTotal);
-                            const caixaVal = Math.max(0, totalIn - (despVal + diesVal + capVal));
-
-                            const targets = [
-                              { id: 4, val: despVal },
-                              { id: 5, val: diesVal },
-                              { id: 6, val: capVal },
-                              { id: 7, val: caixaVal }
-                            ].filter(t => t.val > 0);
-
-                            const links = [];
-                            sources.forEach(s => {
-                              targets.forEach(t => {
-                                const val = s.val * (t.val / totalIn);
-                                if (val > 0.01) links.push({ source: s.id, target: t.id, value: val });
-                              });
-                            });
-                            return links;
-                          })()
-                        };
-                        return (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <Sankey
-                              data={sData}
-                              nodePadding={30}
-                              margin={{ top: 20, left: 100, right: 140, bottom: 20 }}
-                              link={{ stroke: '#cbd5e1', strokeOpacity: 0.3 }}
-                              node={(props) => {
-                                const { x, y, width, height, index, payload } = props;
-                                const isRight = x > 300;
-                                return (
-                                  <Layer key={`node-${index}`}>
-                                    <rect
-                                      x={x}
-                                      y={y}
-                                      width={width}
-                                      height={height}
-                                      fill={payload.fill}
-                                      rx={2}
-                                    />
-                                    <text
-                                      x={isRight ? x + width + 8 : x - 8}
-                                      y={y + height / 2}
-                                      textAnchor={isRight ? 'start' : 'end'}
-                                      fontSize="9px"
-                                      fontWeight="bold"
-                                      fill="#1e293b"
-                                    >
-                                      {payload.name}
-                                    </text>
-                                    <text
-                                      x={isRight ? x + width + 8 : x - 8}
-                                      y={y + height / 2 + 10}
-                                      textAnchor={isRight ? 'start' : 'end'}
-                                      fontSize="8px"
-                                      fontWeight="500"
-                                      fill="#64748b"
-                                    >
-                                      {formatBRL(payload.value)}
-                                    </text>
-                                  </Layer>
-                                );
-                              }}
-                            >
-                              <Tooltip 
-                                formatter={(val) => formatBRL(val)}
-                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
-                              />
-                            </Sankey>
-                          </ResponsiveContainer>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Coluna Direita: Detalhes de Conferência e Fluxo */}
-                <div className="lg:col-span-6 flex flex-col gap-6">
+                {/* Coluna Principal: Detalhes de Conferência e Fluxo */}
+                <div className="lg:col-span-12 flex flex-col gap-6">
 
                   {/* Composição: Resultado + Custo + Outros */}
                   {(() => {
