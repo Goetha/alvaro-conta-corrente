@@ -2567,50 +2567,65 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 <div className="lg:col-span-7 flex flex-col gap-6">
 
                     {/* Composição: Resultado + Custo + Outros */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                      <div className="flex items-center justify-between mb-4">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo + Ajustes</p>
-                        <Settings
-                          size={14}
-                          className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                          onClick={() => setResultadoConfigOpen(true)}
-                        />
-                      </div>
-                      <div className="flex flex-col gap-6">
-                        {/* Gráfico Principal (Top) */}
-                        <div className="w-full h-44 -mt-2">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart
-                              data={[
-                                { name: 'Res.', valor: kpiResultadoDinamico, fill: '#10b981' },
-                                { name: 'Cap.', valor: custoCapitalTotal, fill: '#f59e0b' },
-                                { name: 'Ajuste', valor: outrasEntradas + emprestimoFco, fill: '#9333ea' }
-                              ]}
-                              margin={{ top: 10, right: 20, left: 20, bottom: 5 }}
-                              barCategoryGap="25%"
-                            >
-                              <XAxis 
-                                dataKey="name" 
-                                axisLine={false} 
-                                tickLine={false} 
-                                tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
-                                interval={0}
-                              />
-                              <Tooltip 
-                                formatter={(v) => [formatBRL(v), 'Valor']} 
-                                labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
-                                cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
-                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
-                              />
-                              <ReferenceLine y={0} stroke="#e2e8f0" />
-                              <Bar dataKey="valor" radius={[2, 2, 2, 2]}>
-                                {[0, 1, 2].map((i) => (
-                                  <Cell key={`cell-${i}`} fill={['#10b981', '#f59e0b', '#9333ea'][i]} />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
+                    {(() => {
+                      const op = systemKpiOpsResultado || {};
+                      const bars = [];
+                      
+                      // Componentes do Resultado
+                      if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                      if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
+                      if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                      if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
+
+                      // Ajustes Fixos
+                      bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#f59e0b' });
+                      bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#9333ea' });
+                      bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#b45309' });
+
+                      return (
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                          <div className="flex items-center justify-between mb-4">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Detalhamento da Composição de Caixa</p>
+                            <Settings
+                              size={14}
+                              className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
+                              onClick={() => setResultadoConfigOpen(true)}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-6">
+                            {/* Gráfico Principal (Top) */}
+                            <div className="w-full h-44 -mt-2">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                  data={bars}
+                                  margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
+                                  barGap={2}
+                                  barCategoryGap="20%"
+                                >
+                                  <XAxis 
+                                    dataKey="name" 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
+                                    interval={0}
+                                  />
+                                  <Tooltip 
+                                    formatter={(v) => [formatBRL(v), 'Valor']} 
+                                    labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
+                                    cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
+                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                                  />
+                                  <ReferenceLine y={0} stroke="#e2e8f0" />
+                                  <Bar dataKey="valor" radius={[2, 2, 0, 0]}>
+                                    {bars.map((entry, index) => (
+                                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                                    ))}
+                                  </Bar>
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                      );
+                    })()}
 
                         {/* Legenda de Apoio (Bottom) */}
                         <div className="w-full">
