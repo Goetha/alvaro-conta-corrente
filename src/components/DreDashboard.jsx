@@ -2564,20 +2564,24 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               { id: 3, val: emprestimoFco }
                             ].filter(s => s.val > 0);
 
+                            const totalIn = sources.reduce((s, x) => s + x.val, 0);
+                            const despVal = Math.abs(kpiDespesasDinamico);
+                            const diesVal = Math.abs(descontoDieselManual);
+                            const capVal = Math.abs(custoCapitalTotal);
+                            const caixaVal = Math.max(0, totalIn - (despVal + diesVal + capVal));
+
                             const targets = [
-                              { id: 4, val: Math.abs(kpiDespesasDinamico) },
-                              { id: 5, val: Math.abs(descontoDieselManual) },
-                              { id: 6, val: Math.abs(custoCapitalTotal) },
-                              { id: 7, val: Math.max(0, geracaoCaixaSoma) }
+                              { id: 4, val: despVal },
+                              { id: 5, val: diesVal },
+                              { id: 6, val: capVal },
+                              { id: 7, val: caixaVal }
                             ].filter(t => t.val > 0);
 
-                            const totalIn = sources.reduce((s, x) => s + x.val, 0);
                             const links = [];
-
                             sources.forEach(s => {
                               targets.forEach(t => {
                                 const val = s.val * (t.val / totalIn);
-                                if (val > 1) links.push({ source: s.id, target: t.id, value: val });
+                                if (val > 0.01) links.push({ source: s.id, target: t.id, value: val });
                               });
                             });
                             return links;
