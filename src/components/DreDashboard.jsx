@@ -2385,7 +2385,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     </div>
                     <div className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[8px] font-black uppercase rounded shadow-sm">BB</div>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-700 transition-colors">Conta Corrente</p>
+                  <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider mb-1 group-hover:text-blue-700 transition-colors">Conta Corrente</p>
                   <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(ccBB)}</p>
                 </div>
 
@@ -2397,7 +2397,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     </div>
                     <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[8px] font-black uppercase rounded shadow-sm">CAIXA</div>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-blue-600 transition-colors">Saldo Caixa</p>
+                  <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider mb-1 group-hover:text-blue-600 transition-colors">Saldo Caixa</p>
                   <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
                 </div>
 
@@ -2405,11 +2405,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-emerald-300 transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-                        <TrendingUp size={16} className="text-emerald-600" />
-                      </div>
                       <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">A Receber</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">A Receber</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
                       </div>
                     </div>
@@ -2432,11 +2429,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-rose-300 transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
-                        <TrendingDown size={16} className="text-rose-600" />
-                      </div>
                       <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">A Pagar</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">A Pagar</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aPagarSaldo)}</p>
                       </div>
                     </div>
@@ -2459,11 +2453,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 <div className="lg:col-span-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-teal-300 transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
-                        <DollarSign size={16} className="text-teal-600" />
-                      </div>
                       <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Geração Caixa</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">Geração Caixa</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(geracaoCaixaSoma)}</p>
                       </div>
                     </div>
@@ -2510,11 +2501,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-orange-300 transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                        <Activity size={16} className="text-orange-600" />
-                      </div>
                       <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Diferença</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">Diferença</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(kpiDiferencaFinal)}</p>
                       </div>
                     </div>
