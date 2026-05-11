@@ -2577,63 +2577,63 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         />
                       </div>
                       <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="w-24 h-24 flex-shrink-0">
+                        <div className="w-32 h-32 flex-shrink-0 relative">
                           <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={[
-                                  { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
-                                  { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' },
-                                  { name: 'Outras Ent.', value: Math.max(0, outrasEntradas), fill: '#9333ea' },
-                                  { name: 'Empréstimos', value: Math.max(0, emprestimoFco), fill: '#d97706' }
-                                ]}
-                                innerRadius={18}
-                                outerRadius={35}
-                                paddingAngle={5}
-                                dataKey="value"
-                                stroke="none"
-                              >
-                                <Cell key="cell-0" fill="#3b82f6" />
-                                <Cell key="cell-1" fill="#f59e0b" />
-                                <Cell key="cell-2" fill="#9333ea" />
-                                <Cell key="cell-3" fill="#d97706" />
-                              </Pie>
+                            <RadialBarChart 
+                              innerRadius="30%" 
+                              outerRadius="100%" 
+                              data={[
+                                { name: 'Empr.', valor: emprestimoFco, fill: '#d97706' },
+                                { name: 'Outras', valor: outrasEntradas, fill: '#9333ea' },
+                                { name: 'Custo', valor: custoCapitalTotal, fill: '#f59e0b' },
+                                { name: 'Res.', valor: kpiResultadoDinamico, fill: '#3b82f6' }
+                              ].filter(v => v.valor > 0)} 
+                              startAngle={180} 
+                              endAngle={-180}
+                            >
+                              <RadialBar
+                                minAngle={15}
+                                background
+                                clockWise={true}
+                                dataKey="valor"
+                                cornerRadius={10}
+                              />
                               <Tooltip formatter={(v) => formatBRL(v)} />
-                            </PieChart>
+                            </RadialBarChart>
                           </ResponsiveContainer>
                         </div>
                         <div className="flex-1 space-y-1.5">
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center group/item">
                             <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#3b82f6' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">Resultado</span>
+                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#3b82f6' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Resultado</span>
                             </div>
-                            <span className="text-xs font-black text-blue-600">{formatBRL(kpiResultadoDinamico)}</span>
+                            <span className="text-xs font-black text-blue-600 tabular-nums">{formatBRL(kpiResultadoDinamico)}</span>
                           </div>
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center group/item">
                             <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">Custo Cap.</span>
+                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#f59e0b' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Custo Cap.</span>
                             </div>
-                            <span className="text-xs font-black text-amber-600">{formatBRL(custoCapitalTotal)}</span>
+                            <span className="text-xs font-black text-amber-600 tabular-nums">{formatBRL(custoCapitalTotal)}</span>
                           </div>
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center group/item">
                             <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#9333ea' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">Outras Ent.</span>
+                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#9333ea' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Outras Ent.</span>
                             </div>
-                            <span className="text-xs font-black text-purple-600">{formatBRL(outrasEntradas)}</span>
+                            <span className="text-xs font-black text-purple-600 tabular-nums">{formatBRL(outrasEntradas)}</span>
                           </div>
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center group/item">
                             <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase">Empréstimos</span>
+                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#d97706' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Empréstimos</span>
                             </div>
-                            <span className="text-xs font-black text-amber-700">{formatBRL(emprestimoFco)}</span>
+                            <span className="text-xs font-black text-amber-700 tabular-nums">{formatBRL(emprestimoFco)}</span>
                           </div>
-                          <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
-                            <span className="text-[9px] font-black text-slate-400 uppercase">Total Comp.</span>
-                            <span className="text-xs font-black text-slate-800">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
+                          <div className="pt-2 mt-1 border-t border-slate-100 flex justify-between items-center bg-slate-50/50 -mx-1 px-1 rounded-sm">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Total Geral</span>
+                            <span className="text-sm font-black text-slate-900 tabular-nums">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
                           </div>
                         </div>
                       </div>
