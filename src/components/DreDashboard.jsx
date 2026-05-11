@@ -2197,6 +2197,35 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
     return Number(vCC) + Number(vCX) + Number(vREC) + Number(vPAG) + Number(vOUT) + Number(vEMP) + Number(vCCAP) + Number(customSoma) + Number(rowsSoma);
   }, [ccBB, saldoCaixa, aReceberSaldoNet, aPagarSaldo, outrasEntradas, custoCapitalTotal, calculatedCustomKpis, dreConfig, expensesData, systemKpiOps]);
+  const chartDataGC = useMemo(() => {
+    const op = systemKpiOps || {};
+    const items = [];
+    
+    const addItem = (label, value, operation) => {
+      if (operation === 'soma') items.push({ name: label, valor: value, fill: '#10b981' });
+      else if (operation === 'subtrai') items.push({ name: label, valor: -value, fill: '#ef4444' });
+    };
+
+    addItem('Conta BB', ccBB, op.ccBB);
+    addItem('Caixa', saldoCaixa, op.saldoCaixa);
+    addItem('A Receber', aReceberSaldoNet, op.aReceber);
+    addItem('A Pagar', aPagarSaldo, op.aPagar);
+    addItem('Outras Ent.', outrasEntradas, op.outrasEntradas);
+    addItem('Empréstimos', emprestimoFco, op.emprestimoFco);
+    addItem('Custo Cap.', custoCapitalTotal, op.custoCapital);
+
+    calculatedCustomKpis.forEach(k => {
+      addItem(k.titulo, Number(k.valor) || 0, k.operacao_caixa);
+    });
+
+    const normalRows = dreConfig.filter(l => !l.codigo_conta?.startsWith('VIRTUAL_'));
+    normalRows.forEach(l => {
+       const rowVal = expensesData[l.id] || 0;
+       addItem(l.nome, rowVal, op[l.id]);
+    });
+
+    return items.filter(i => i.valor !== 0);
+  }, [systemKpiOps, ccBB, saldoCaixa, aReceberSaldoNet, aPagarSaldo, outrasEntradas, emprestimoFco, custoCapitalTotal, calculatedCustomKpis, dreConfig, expensesData]);
 
 
 
@@ -2325,8 +2354,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
           return (
             <div className="flex flex-col gap-6">
               
-              {/* Linha 1: Top 4 KPIs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Linha 1: Top KPIs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                 {/* Conta Corrente BB */}
                 <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col hover:border-yellow-400 transition-colors group">
                   <div className="flex justify-between items-start mb-4">
@@ -2351,16 +2380,38 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(saldoCaixa)}</p>
                 </div>
 
-                {/* Geração de Caixa */}
-                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col relative">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center">
-                      <DollarSign size={20} className="text-teal-600" />
+                {/* Geração de Caixa (Agora como Gráfico Detalhado) */}
+                <div className="lg:col-span-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-teal-300 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                        <DollarSign size={16} className="text-teal-600" />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Geração Caixa</p>
+                        <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(geracaoCaixaSoma)}</p>
+                      </div>
                     </div>
-                    <Settings size={14} className="text-slate-300 cursor-pointer hover:text-slate-500" onClick={() => setGcConfigOpen(true)} />
+                    <Settings size={14} className="text-slate-300 cursor-pointer hover:text-teal-600 transition-colors" onClick={() => setGcConfigOpen(true)} />
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Geração Caixa</p>
-                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(geracaoCaixaSoma)}</p>
+                  
+                  <div className="flex-1 mt-2 min-h-[60px] h-16 w-full">
+                    {chartDataGC.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                          <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
+                          <ReferenceLine y={0} stroke="#e2e8f0" />
+                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={20}>
+                            {chartDataGC.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-[10px] text-slate-400 font-medium">Nenhum componente configurado</div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Diferença */}
