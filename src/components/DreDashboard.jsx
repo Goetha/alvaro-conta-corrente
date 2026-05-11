@@ -2535,7 +2535,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                 </div>
               </div>
 
-              {/* Linha 2: Gráficos e Detalhes (Receitas | Composição | Despesas) */}
+              {/* Linha 2: Gráficos e Detalhes (Receitas | Despesas | Composição) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 {/* Bloco Receitas (Esquerda - 3/12) */}
@@ -2584,47 +2584,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                 </div>
 
-                {/* Bloco Central (6/12): Detalhamento da Composição */}
-                <div className="lg:col-span-6 flex flex-col gap-6">
-                  {(() => {
-                    const op = systemKpiOpsResultado || {};
-                    const bars = [];
-                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
-                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
-                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
-                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
-                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
-
-                    return (
-                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px]">
-                        <div className="flex items-center justify-between mb-4">
-                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Composição de Caixa</p>
-                          <Settings size={14} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
-                        </div>
-                        <div className="flex-1 w-full min-h-[300px]">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={bars} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                              <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
-                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                              <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                              <ReferenceLine y={0} stroke="#cbd5e1" />
-                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={40}>
-                                {bars.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.valor >= 0 ? '#10b981' : '#f43f5e'} />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-
-                {/* Bloco Despesas (Direita - 3/12) */}
+                {/* Bloco Despesas (Centro - 3/12) */}
                 <div className={`lg:col-span-3 bg-white rounded-xl border transition-colors duration-500 shadow-sm overflow-hidden flex flex-col ${isOk ? 'border-slate-200' : 'border-rose-300 ring-4 ring-rose-500/10'}`}>
                   <div className={`px-4 py-3 border-b flex items-center justify-between transition-colors duration-500 ${isOk ? 'bg-green-50 border-green-100' : 'bg-rose-50 border-rose-100'}`}>
                     <div className="flex items-center gap-2">
@@ -2669,6 +2629,48 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     </div>
                   </div>
                 </div>
+
+                {/* Bloco Direita (6/12): Detalhamento da Composição */}
+                <div className="lg:col-span-6 flex flex-col gap-6">
+                  {(() => {
+                    const op = systemKpiOpsResultado || {};
+                    const bars = [];
+                    if (op.receitasTotal && op.receitasTotal !== 'nenhum') bars.push({ name: 'Receita', valor: op.receitasTotal === 'soma' ? totalReceitasDRE : -totalReceitasDRE, fill: op.receitasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.vendaBens && op.vendaBens !== 'nenhum') bars.push({ name: 'Venda B.', valor: op.vendaBens === 'soma' ? vendaBensCod6 : -vendaBensCod6, fill: op.vendaBens === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.despesasTotal && op.despesasTotal !== 'nenhum') bars.push({ name: 'Despesa', valor: op.despesasTotal === 'soma' ? kpiDespesasDinamico : -kpiDespesasDinamico, fill: op.despesasTotal === 'soma' ? '#10b981' : '#f43f5e' });
+                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum') bars.push({ name: 'D. Diesel', valor: op.descontoDiesel === 'soma' ? descontoDieselManual : -descontoDieselManual, fill: op.descontoDiesel === 'soma' ? '#10b981' : '#f43f5e' });
+                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981' });
+                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981' });
+                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981' });
+
+                    return (
+                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px]">
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Composição de Caixa</p>
+                          <Settings size={14} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
+                        </div>
+                        <div className="flex-1 w-full min-h-[300px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={bars} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                              <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
+                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                              <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                              <ReferenceLine y={0} stroke="#cbd5e1" />
+                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={40}>
+                                {bars.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={entry.valor >= 0 ? '#10b981' : '#f43f5e'} />
+                                ))}
+                              </Bar>
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+              </div>
 
               </div>
 
