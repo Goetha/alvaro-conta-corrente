@@ -2412,11 +2412,18 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartDataReceber} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                      <BarChart data={chartDataReceber} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
+                        <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          <LabelList 
+                            dataKey="valor" 
+                            position="top" 
+                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
                           {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
                       </BarChart>
@@ -2436,11 +2443,18 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartDataPagar} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                      <BarChart data={chartDataPagar} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
+                        <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          <LabelList 
+                            dataKey="valor" 
+                            position="top" 
+                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
                           {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
                       </BarChart>
@@ -2463,7 +2477,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     {chartDataGC.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                        <BarChart data={chartDataGC} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                           <XAxis
                             dataKey="name"
                             axisLine={false}
@@ -2476,6 +2490,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               return name;
                             }}
                           />
+                          <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                           <Tooltip
                             formatter={(val) => [formatBRL(val), 'Valor']}
                             labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2484,6 +2499,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20} minPointSize={4}>
+                            <LabelList 
+                              dataKey="valor" 
+                              position="top" 
+                              formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            />
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
@@ -2509,7 +2530,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                   <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartDataDif} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                      <BarChart data={chartDataDif} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis
                           dataKey="name"
                           axisLine={false}
@@ -2517,6 +2538,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
                           interval={0}
                         />
+                        <YAxis hide domain={['auto', 'auto']} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip
                           formatter={(val) => [formatBRL(val), 'Valor']}
                           labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2525,6 +2547,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                         />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          <LabelList 
+                            dataKey="valor" 
+                            position="top" 
+                            formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
                           {chartDataDif.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.fill} />
                           ))}
