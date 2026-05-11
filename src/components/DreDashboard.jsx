@@ -2682,12 +2682,11 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
                     // Dados para o Gráfico 2: CAIXA (FLUXO)
                     const rawBarsCaixa = [
-                      { name: 'Res. + Custo Cap.', valor: resultadoOperacional + custoCapitalTotal },
-                      { name: 'Outras Ent.', valor: outrasEntradas },
-                      { name: 'Empréstimos', valor: emprestimoFco }
+                      { name: 'Resultado', valor: resultadoOperacional },
+                      { name: 'C. Capital', valor: custoCapitalTotal }
                     ];
 
-                    const geracaoCaixaFinal = resultadoOperacional + custoCapitalTotal + outrasEntradas + emprestimoFco;
+                    const geracaoCaixaFinal = resultadoOperacional + custoCapitalTotal;
                     
                     const barsCaixa = [
                       ...rawBarsCaixa.filter(b => b.valor < 0).map(b => ({ ...b, fill: '#f43f5e' })),
