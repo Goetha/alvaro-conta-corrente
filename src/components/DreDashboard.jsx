@@ -2584,8 +2584,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                               data={[
                                 { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#3b82f6' },
                                 { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#f59e0b' },
-                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' },
-                                { name: 'Total', valor: [0, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#1e293b' }
+                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' }
                               ]}
                               margin={{ top: 20, right: 10, left: -20, bottom: 5 }}
                             >
@@ -2607,8 +2606,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px' }} 
                               />
                               <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={32} label={{ position: 'top', formatter: (v) => Array.isArray(v) ? formatBRL(v[1]-v[0]) : '', fontSize: 9, fontWeight: 'bold', fill: '#475569' }}>
-                                {[0, 1, 2, 3].map((i) => (
-                                  <Cell key={`cell-${i}`} fill={['#3b82f6', '#f59e0b', '#9333ea', '#1e293b'][i]} />
+                                {[0, 1, 2].map((i) => (
+                                  <Cell key={`cell-${i}`} fill={['#3b82f6', '#f59e0b', '#9333ea'][i]} />
                                 ))}
                               </Bar>
                             </BarChart>
