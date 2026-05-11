@@ -2577,29 +2577,27 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         />
                       </div>
                       <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="w-32 h-32 flex-shrink-0 relative">
+                        <div className="w-40 h-32 flex-shrink-0">
                           <ResponsiveContainer width="100%" height="100%">
-                            <RadialBarChart 
-                              innerRadius="30%" 
-                              outerRadius="100%" 
+                            <BarChart
                               data={[
-                                { name: 'Empr.', valor: emprestimoFco, fill: '#d97706' },
-                                { name: 'Outras', valor: outrasEntradas, fill: '#9333ea' },
-                                { name: 'Custo', valor: custoCapitalTotal, fill: '#f59e0b' },
-                                { name: 'Res.', valor: kpiResultadoDinamico, fill: '#3b82f6' }
-                              ].filter(v => v.valor > 0)} 
-                              startAngle={180} 
-                              endAngle={-180}
+                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#2563eb' },
+                                { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#d97706' },
+                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#7c3aed' },
+                                { name: 'Total', valor: [0, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#0f172a' }
+                              ]}
+                              margin={{ top: 5, right: 5, left: -25, bottom: 5 }}
                             >
-                              <RadialBar
-                                minAngle={15}
-                                background
-                                clockWise={true}
-                                dataKey="valor"
-                                cornerRadius={10}
-                              />
-                              <Tooltip formatter={(v) => formatBRL(v)} />
-                            </RadialBarChart>
+                              <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f1f5f9" />
+                              <XAxis dataKey="name" tick={{ fontSize: 8, fontWeight: 'bold', fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 8, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
+                              <Tooltip formatter={(v) => formatBRL(Array.isArray(v) ? v[1] - v[0] : v)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px' }} />
+                              <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={16}>
+                                {[0, 1, 2, 3].map((i) => (
+                                  <Cell key={`cell-${i}`} fill={['#2563eb', '#d97706', '#7c3aed', '#0f172a'][i]} />
+                                ))}
+                              </Bar>
+                            </BarChart>
                           </ResponsiveContainer>
                         </div>
                         <div className="flex-1 space-y-3">
