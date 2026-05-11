@@ -2668,22 +2668,33 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     const valDiesel = op.descontoDiesel === 'soma' ? descontoDieselManual : (op.descontoDiesel === 'subtrai' ? -descontoDieselManual : 0);
                     const resultadoOperacional = valReceita + valVenda + valDespesa + valDiesel;
 
-                    const barsOp = [];
-                    if (totalReceitasDRE !== 0) barsOp.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e' });
-                    if (vendaBensCod6 !== 0) barsOp.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e' });
-                    if (kpiDespesasDinamico !== 0) barsOp.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e' });
-                    if (descontoDieselManual !== 0) barsOp.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e' });
-                    barsOp.push({ name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true });
+                    const rawBarsOp = [];
+                    if (totalReceitasDRE !== 0) rawBarsOp.push({ name: 'Receita', valor: valReceita });
+                    if (vendaBensCod6 !== 0) rawBarsOp.push({ name: 'Venda B.', valor: valVenda });
+                    if (kpiDespesasDinamico !== 0) rawBarsOp.push({ name: 'Despesa', valor: valDespesa });
+                    if (descontoDieselManual !== 0) rawBarsOp.push({ name: 'D. Diesel', valor: valDiesel });
+
+                    const barsOp = [
+                      ...rawBarsOp.filter(b => b.valor < 0).map(b => ({ ...b, fill: '#f43f5e' })),
+                      ...rawBarsOp.filter(b => b.valor >= 0).map(b => ({ ...b, fill: '#10b981' })),
+                      { name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true }
+                    ];
 
                     // Dados para o Gráfico 2: CAIXA (FLUXO)
-                    const barsCaixa = [
-                      { name: 'Resultado', valor: resultadoOperacional, fill: '#6366f1' },
-                      { name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981', opacity: 0.7 },
-                      { name: 'Outras Ent.', valor: outrasEntradas, fill: '#10b981', opacity: 0.7 },
-                      { name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981', opacity: 0.7 }
+                    const rawBarsCaixa = [
+                      { name: 'Resultado', valor: resultadoOperacional },
+                      { name: 'C. Capital', valor: custoCapitalTotal },
+                      { name: 'Outras Ent.', valor: outrasEntradas },
+                      { name: 'Empréstimos', valor: emprestimoFco }
                     ];
+
                     const geracaoCaixaFinal = resultadoOperacional + custoCapitalTotal + outrasEntradas + emprestimoFco;
-                    barsCaixa.push({ name: 'FINAL', valor: geracaoCaixaFinal, fill: '#0f172a', isTotal: true });
+                    
+                    const barsCaixa = [
+                      ...rawBarsCaixa.filter(b => b.valor < 0).map(b => ({ ...b, fill: '#f43f5e' })),
+                      ...rawBarsCaixa.filter(b => b.valor >= 0).map(b => ({ ...b, fill: '#10b981' })),
+                      { name: 'FINAL', valor: geracaoCaixaFinal, fill: '#0f172a', isTotal: true }
+                    ];
 
                     return (
                       <>
@@ -2704,7 +2715,15 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
-                                  {barsCaixa.map((entry, index) => <Cell key={index} fill={entry.fill} fillOpacity={entry.opacity || 1} stroke={entry.isTotal ? '#1e293b' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
+                                  {barsCaixa.map((entry, index) => (
+                                    <Cell 
+                                      key={index} 
+                                      fill={entry.fill} 
+                                      fillOpacity={entry.isTotal ? 1 : 0.7} 
+                                      stroke={entry.isTotal ? '#1e293b' : 'transparent'} 
+                                      strokeWidth={entry.isTotal ? 2 : 0} 
+                                    />
+                                  ))}
                                 </Bar>
                               </BarChart>
                             </ResponsiveContainer>
@@ -2733,7 +2752,14 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
-                                  {barsOp.map((entry, index) => <Cell key={index} fill={entry.fill} stroke={entry.isTotal ? '#4f46e5' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
+                                  {barsOp.map((entry, index) => (
+                                    <Cell 
+                                      key={index} 
+                                      fill={entry.fill} 
+                                      stroke={entry.isTotal ? '#4f46e5' : 'transparent'} 
+                                      strokeWidth={entry.isTotal ? 2 : 0} 
+                                    />
+                                  ))}
                                 </Bar>
                               </BarChart>
                             </ResponsiveContainer>
