@@ -2656,84 +2656,94 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                   </div>
                 </div>
 
-                {/* Bloco Direita (4/12): Detalhamento da Composição */}
-                <div className="lg:col-span-4 flex flex-col gap-6">
+                {/* Bloco Direita (4/12): Detalhamento da Composição Separado */}
+                <div className="lg:col-span-4 flex flex-col gap-5">
                   {(() => {
                     const op = systemKpiOpsResultado || {};
-                    const bars = [];
                     
-                    // 1. Itens da Operação (Configuração)
+                    // Dados para o Gráfico 1: OPERACIONAL (DRE)
                     const valReceita = op.receitasTotal === 'soma' ? totalReceitasDRE : (op.receitasTotal === 'subtrai' ? -totalReceitasDRE : 0);
                     const valVenda = op.vendaBens === 'soma' ? vendaBensCod6 : (op.vendaBens === 'subtrai' ? -vendaBensCod6 : 0);
                     const valDespesa = op.despesasTotal === 'soma' ? kpiDespesasDinamico : (op.despesasTotal === 'subtrai' ? -kpiDespesasDinamico : 0);
                     const valDiesel = op.descontoDiesel === 'soma' ? descontoDieselManual : (op.descontoDiesel === 'subtrai' ? -descontoDieselManual : 0);
-                    
                     const resultadoOperacional = valReceita + valVenda + valDespesa + valDiesel;
 
-                    if (op.receitasTotal && op.receitasTotal !== 'nenhum' && totalReceitasDRE !== 0) bars.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.vendaBens && op.vendaBens !== 'nenhum' && vendaBensCod6 !== 0) bars.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.despesasTotal && op.despesasTotal !== 'nenhum' && kpiDespesasDinamico !== 0) bars.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
-                    if (op.descontoDiesel && op.descontoDiesel !== 'nenhum' && descontoDieselManual !== 0) bars.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e', type: 'op' });
+                    const barsOp = [];
+                    if (totalReceitasDRE !== 0) barsOp.push({ name: 'Receita', valor: valReceita, fill: valReceita >= 0 ? '#10b981' : '#f43f5e' });
+                    if (vendaBensCod6 !== 0) barsOp.push({ name: 'Venda B.', valor: valVenda, fill: valVenda >= 0 ? '#10b981' : '#f43f5e' });
+                    if (kpiDespesasDinamico !== 0) barsOp.push({ name: 'Despesa', valor: valDespesa, fill: valDespesa >= 0 ? '#10b981' : '#f43f5e' });
+                    if (descontoDieselManual !== 0) barsOp.push({ name: 'D. Diesel', valor: valDiesel, fill: valDiesel >= 0 ? '#10b981' : '#f43f5e' });
+                    barsOp.push({ name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true });
 
-                    // 2. Barra de Destaque: RESULTADO
-                    bars.push({ name: 'RESULTADO', valor: resultadoOperacional, fill: '#6366f1', isTotal: true });
-
-                    // 3. Outros Ajustes (Fora da Config)
-                    bars.push({ name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981', type: 'adj' });
-                    bars.push({ name: 'O. Entradas', valor: outrasEntradas, fill: '#10b981', type: 'adj' });
-                    bars.push({ name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981', type: 'adj' });
-
+                    // Dados para o Gráfico 2: CAIXA (FLUXO)
+                    const barsCaixa = [
+                      { name: 'Resultado', valor: resultadoOperacional, fill: '#6366f1' },
+                      { name: 'C. Capital', valor: custoCapitalTotal, fill: '#10b981', opacity: 0.7 },
+                      { name: 'Outras Ent.', valor: outrasEntradas, fill: '#10b981', opacity: 0.7 },
+                      { name: 'Empréstimos', valor: emprestimoFco, fill: '#10b981', opacity: 0.7 }
+                    ];
                     const geracaoCaixaFinal = resultadoOperacional + custoCapitalTotal + outrasEntradas + emprestimoFco;
+                    barsCaixa.push({ name: 'FINAL', valor: geracaoCaixaFinal, fill: '#0f172a', isTotal: true });
 
                     return (
-                      <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-full min-h-[500px] overflow-hidden">
-                        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                          <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fluxo de Caixa Operacional</p>
-                            <h2 className="text-sm font-black text-slate-800">Composição de Caixa</h2>
+                      <>
+                        {/* CARD 1: RESULTADO OPERACIONAL */}
+                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                          <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div className="flex items-center gap-2">
+                              <Activity size={14} className="text-indigo-600" />
+                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">DRE: Resultado Operacional</h2>
+                            </div>
+                            <Settings size={12} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
                           </div>
-                          <Settings size={14} className="text-slate-300 hover:text-slate-500 cursor-pointer" onClick={() => setResultadoConfigOpen(true)} />
-                        </div>
-                        
-                        <div className="flex-1 w-full min-h-[300px] p-5">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={bars} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                              <XAxis dataKey="name" tick={{ fontSize: 8, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
-                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 8, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                              <Tooltip 
-                                cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} 
-                                formatter={(val) => formatBRL(val)} 
-                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
-                              />
-                              <ReferenceLine y={0} stroke="#cbd5e1" />
-                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={35}>
-                                {bars.map((entry, index) => (
-                                  <Cell 
-                                    key={`cell-${index}`} 
-                                    fill={entry.fill} 
-                                    stroke={entry.isTotal ? '#4f46e5' : 'transparent'}
-                                    strokeWidth={entry.isTotal ? 2 : 0}
-                                    fillOpacity={entry.type === 'adj' ? 0.6 : 1}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
+                          <div className="h-[220px] p-4">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={barsOp}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
+                                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 7 }} axisLine={false} tickLine={false} />
+                                <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                <ReferenceLine y={0} stroke="#cbd5e1" />
+                                <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
+                                  {barsOp.map((entry, index) => <Cell key={index} fill={entry.fill} stroke={entry.isTotal ? '#4f46e5' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <div className="px-4 py-2 bg-indigo-50/30 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">Resultado</span>
+                            <span className="text-xs font-black text-indigo-700">{formatBRL(resultadoOperacional)}</span>
+                          </div>
                         </div>
 
-                        {/* Rodapé de Resumo com Valores Importantes */}
-                        <div className="bg-slate-50 p-4 border-t border-slate-100 flex flex-col gap-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Resultado da Operação</span>
-                            <span className="text-sm font-black text-indigo-600 tracking-tight">{formatBRL(resultadoOperacional)}</span>
+                        {/* CARD 2: COMPOSIÇÃO DE CAIXA FINAL */}
+                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                          <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div className="flex items-center gap-2">
+                              <Wallet size={14} className="text-slate-600" />
+                              <h2 className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">Fluxo: Composição de Caixa</h2>
+                            </div>
                           </div>
-                          <div className="flex justify-between items-center pt-2 border-t border-slate-200/60">
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Geração de Caixa Final</span>
-                            <span className="text-lg font-black text-slate-900 tracking-tighter">{formatBRL(geracaoCaixaFinal)}</span>
+                          <div className="h-[220px] p-4">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={barsCaixa}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
+                                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 7 }} axisLine={false} tickLine={false} />
+                                <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                                <ReferenceLine y={0} stroke="#cbd5e1" />
+                                <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
+                                  {barsCaixa.map((entry, index) => <Cell key={index} fill={entry.fill} fillOpacity={entry.opacity || 1} stroke={entry.isTotal ? '#1e293b' : 'transparent'} strokeWidth={entry.isTotal ? 2 : 0} />)}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">Geração Final</span>
+                            <span className="text-xs font-black text-slate-900">{formatBRL(geracaoCaixaFinal)}</span>
                           </div>
                         </div>
-                      </div>
+                      </>
                     );
                   })()}
                 </div>
