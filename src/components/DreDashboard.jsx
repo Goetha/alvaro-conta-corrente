@@ -2716,7 +2716,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsCaixa} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  reversed={true} padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={2} />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
@@ -2753,7 +2753,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsOp} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  reversed={true} padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
