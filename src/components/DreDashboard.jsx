@@ -2399,9 +2399,15 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                     {chartDataGC.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartDataGC} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                          <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
+                          <XAxis dataKey="name" hide />
+                          <Tooltip 
+                            formatter={(val) => [formatBRL(val), 'Valor']} 
+                            labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
+                            cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
+                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                          />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
-                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={20}>
+                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={20} minPointSize={4}>
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
