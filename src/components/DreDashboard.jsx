@@ -2551,24 +2551,37 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             { name: 'Venda Bens', fill: '#34d399' },
                             { name: 'O. Entradas', fill: '#6ee7b7' },
                             { name: 'Empréstimos', fill: '#a7f3d0' },
-                            { name: 'Consolidação', fill: '#94a3b8' }, // Nó central
                             { name: 'Despesas', fill: '#f43f5e' },
                             { name: 'D. Diesel', fill: '#fb7185' },
                             { name: 'C. Capital', fill: '#facc15' },
                             { name: 'G. Caixa', fill: '#0d9488' }
                           ],
-                          links: [
-                            // Entradas para o Centro
-                            { source: 0, target: 4, value: Math.max(1, totalReceitasDRE) },
-                            { source: 1, target: 4, value: Math.max(1, vendaBensCod6) },
-                            { source: 2, target: 4, value: Math.max(1, outrasEntradas) },
-                            { source: 3, target: 4, value: Math.max(1, emprestimoFco) },
-                            // Centro para Saídas e Saldo
-                            { source: 4, target: 5, value: Math.max(1, Math.abs(kpiDespesasDinamico)) },
-                            { source: 4, target: 6, value: Math.max(1, Math.abs(descontoDieselManual)) },
-                            { source: 4, target: 7, value: Math.max(1, Math.abs(custoCapitalTotal)) },
-                            { source: 4, target: 8, value: Math.max(1, geracaoCaixaSoma) }
-                          ]
+                          links: (() => {
+                            const sources = [
+                              { id: 0, val: totalReceitasDRE },
+                              { id: 1, val: vendaBensCod6 },
+                              { id: 2, val: outrasEntradas },
+                              { id: 3, val: emprestimoFco }
+                            ].filter(s => s.val > 0);
+
+                            const targets = [
+                              { id: 4, val: Math.abs(kpiDespesasDinamico) },
+                              { id: 5, val: Math.abs(descontoDieselManual) },
+                              { id: 6, val: Math.abs(custoCapitalTotal) },
+                              { id: 7, val: Math.max(0, geracaoCaixaSoma) }
+                            ].filter(t => t.val > 0);
+
+                            const totalIn = sources.reduce((s, x) => s + x.val, 0);
+                            const links = [];
+
+                            sources.forEach(s => {
+                              targets.forEach(t => {
+                                const val = s.val * (t.val / totalIn);
+                                if (val > 1) links.push({ source: s.id, target: t.id, value: val });
+                              });
+                            });
+                            return links;
+                          })()
                         };
                         return (
                           <ResponsiveContainer width="100%" height="100%">
