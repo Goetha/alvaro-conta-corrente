@@ -2625,33 +2625,8 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                               </ResponsiveContainer>
                             </div>
 
-                            {/* Legenda de Apoio (Bottom) */}
-                            <div className="w-full">
-                              <div className="flex flex-col gap-1">
-                                {/* Base: Resultado */}
-                                <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
-                                  <div className="flex flex-col">
-                                    <span className="text-[8px] font-black text-blue-500 uppercase tracking-widest leading-none mb-1">Ponto de Partida</span>
-                                    <span className="text-[11px] font-black text-slate-800 uppercase tracking-tight">Resultado Líquido do Mês</span>
-                                  </div>
-                                </div>
-
-                                {/* Ajustes em Grid de 2 colunas para economizar espaço vertical */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3 pl-3 border-l-2 border-slate-100">
-                                  {[
-                                    { label: 'Custo de Capital', val: custoCapitalTotal, color: 'text-amber-600' },
-                                    { label: 'Outras Entradas', val: outrasEntradas, color: 'text-purple-600' },
-                                    { label: 'Empréstimos FCO', val: emprestimoFco, color: 'text-orange-700' }
-                                  ].map((item, idx) => (
-                                    <div key={idx} className="flex flex-col group/item">
-                                      <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">+ {item.label}</span>
-                                      <span className={`text-[11px] font-black tabular-nums ${item.color}`}>{formatBRL(item.val)}</span>
-                                    </div>
-                                  ))}
-                                </div>
-
-                                {/* Totalizador Consolidado */}
-                                <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
+                            {/* Totalizador Consolidado (Agora mais próximo do gráfico) */}
+                            <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
                                   <div className="flex flex-col">
                                     <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
                                     <span className="text-[12px] font-black text-slate-900 uppercase">Geração de Caixa Consolidada</span>
