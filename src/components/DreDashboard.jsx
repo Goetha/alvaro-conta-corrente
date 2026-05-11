@@ -2414,31 +2414,23 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartDataReceber} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 25, bottom: 25 }} />
+                        <YAxis hide domain={['auto', 'auto']} reversed={true} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            content={(props) => {
-                              const { x, y, width, height, value } = props;
-                              if (value === 0) return null;
-                              const isNeg = value < 0;
-                              // O Recharts coloca o 'y' no topo da barra (seja ela positiva ou negativa)
-                              // Para barras negativas, y + height é a ponta de baixo.
-                              return (
-                                <text 
-                                  x={x + width/2} 
-                                  y={isNeg ? y + height + 15 : y - 10} 
-                                  fill="#475569" 
-                                  textAnchor="middle" 
-                                  fontSize="9px" 
-                                  fontWeight="800"
-                                >
-                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                </text>
-                              );
-                            }}
+                            position="top" 
+                            offset={10}
+                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            offset={10}
+                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataReceber.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
@@ -2461,30 +2453,23 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartDataPagar} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 25, bottom: 25 }} />
+                        <YAxis hide domain={['auto', 'auto']} reversed={true} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            content={(props) => {
-                              const { x, y, width, height, value } = props;
-                              if (value === 0) return null;
-                              const isNeg = value < 0;
-                              const labelY = isNeg ? y + height + 15 : y - 10;
-                              return (
-                                <text 
-                                  x={x + width/2} 
-                                  y={labelY} 
-                                  fill="#475569" 
-                                  textAnchor="middle" 
-                                  fontSize="9px" 
-                                  fontWeight="800"
-                                >
-                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                </text>
-                              );
-                            }}
+                            position="top" 
+                            offset={10}
+                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            offset={10}
+                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataPagar.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                         </Bar>
@@ -2521,7 +2506,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               return name;
                             }}
                           />
-                          <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 25, bottom: 25 }} />
+                          <YAxis hide domain={['auto', 'auto']} reversed={true} />
                           <Tooltip
                             formatter={(val) => [formatBRL(val), 'Valor']}
                             labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2529,27 +2514,20 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                           />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
-                          <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20} minPointSize={4}>
+                          <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20} minPointSize={4}>
                             <LabelList 
                               dataKey="valor" 
-                              content={(props) => {
-                                const { x, y, width, height, value } = props;
-                                if (value === 0) return null;
-                                const isNeg = value < 0;
-                                const labelY = isNeg ? y + height + 15 : y - 10;
-                                return (
-                                  <text 
-                                    x={x + width/2} 
-                                    y={labelY} 
-                                    fill="#475569" 
-                                    textAnchor="middle" 
-                                    fontSize="9px" 
-                                    fontWeight="800"
-                                  >
-                                    {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                  </text>
-                                );
-                              }}
+                              position="top" 
+                              offset={10}
+                              formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                            />
+                            <LabelList 
+                              dataKey="valor" 
+                              position="bottom" 
+                              offset={10}
+                              formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                              style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                             />
                             {chartDataGC.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -2584,7 +2562,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
                           interval={0}
                         />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 25, bottom: 25 }} />
+                        <YAxis hide domain={['auto', 'auto']} reversed={true} padding={{ top: 25, bottom: 25 }} />
                         <Tooltip
                           formatter={(val) => [formatBRL(val), 'Valor']}
                           labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2592,27 +2570,20 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
                         />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
-                        <Bar dataKey="valor" radius={[4, 4, 0, 0]} maxBarSize={20}>
+                        <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
                           <LabelList 
                             dataKey="valor" 
-                            content={(props) => {
-                              const { x, y, width, height, value } = props;
-                              if (value === 0) return null;
-                              const isNeg = value < 0;
-                              const labelY = isNeg ? y + height + 15 : y - 10;
-                              return (
-                                <text 
-                                  x={x + width/2} 
-                                  y={labelY} 
-                                  fill="#475569" 
-                                  textAnchor="middle" 
-                                  fontSize="9px" 
-                                  fontWeight="800"
-                                >
-                                  {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                </text>
-                              );
-                            }}
+                            position="top" 
+                            offset={10}
+                            formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
+                          />
+                          <LabelList 
+                            dataKey="valor" 
+                            position="bottom" 
+                            offset={10}
+                            formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                            style={{ fontSize: '9px', fontWeight: '800', fill: '#475569' }} 
                           />
                           {chartDataDif.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -2797,22 +2768,23 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsCaixa} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={['auto', 'auto']} reversed={true} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={2} />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
                                   <LabelList 
                                     dataKey="valor" 
-                                    content={(props) => {
-                                      const { x, y, width, height, value } = props;
-                                      if (!value) return null;
-                                      const isNeg = value < 0;
-                                      return (
-                                        <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#334155" textAnchor="middle" fontSize="9px" fontWeight="800">
-                                          {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                        </text>
-                                      );
-                                    }}
+                                    position="top" 
+                                    offset={10}
+                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                  />
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="bottom" 
+                                    offset={10}
+                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsCaixa.map((entry, index) => (
                                     <Cell 
@@ -2846,22 +2818,23 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsOp} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={['auto', 'auto']} reversed={true} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
                                   <LabelList 
                                     dataKey="valor" 
-                                    content={(props) => {
-                                      const { x, y, width, height, value } = props;
-                                      if (!value) return null;
-                                      const isNeg = value < 0;
-                                      return (
-                                        <text x={x + width/2} y={isNeg ? y + height + 15 : y - 10} fill="#334155" textAnchor="middle" fontSize="9px" fontWeight="800">
-                                          {`R$ ${(Math.abs(value) / 1000).toFixed(1)}k`}
-                                        </text>
-                                      );
-                                    }}
+                                    position="top" 
+                                    offset={10}
+                                    formatter={(v) => v > 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
+                                  />
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="bottom" 
+                                    offset={10}
+                                    formatter={(v) => v < 0 ? `R$ ${(Math.abs(v) / 1000).toFixed(1)}k` : ''} 
+                                    style={{ fontSize: '9px', fontWeight: '800', fill: '#334155' }} 
                                   />
                                   {barsOp.map((entry, index) => (
                                     <Cell 
