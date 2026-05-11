@@ -2406,7 +2406,7 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-3">
                       <div>
-                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">A Receber</p>
+                        <p className="text-[9px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">SALDO A RECEBER ( CONTAS A RECEBER )</p>
                         <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(aReceberSaldoNet)}</p>
                       </div>
                     </div>
