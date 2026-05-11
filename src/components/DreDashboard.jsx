@@ -2560,35 +2560,49 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           <ResponsiveContainer width="100%" height="100%">
                             <Sankey
                               data={sData}
-                              node={{ stroke: '#fff', strokeWidth: 1 }}
                               nodePadding={50}
-                              margin={{ top: 20, left: 10, right: 150, bottom: 20 }}
-                              link={{ stroke: '#cbd5e1', strokeOpacity: 0.2 }}
+                              margin={{ top: 20, left: 10, right: 120, bottom: 20 }}
+                              link={{ stroke: '#cbd5e1', strokeOpacity: 0.3 }}
+                              node={(props) => {
+                                const { x, y, width, height, index, payload } = props;
+                                return (
+                                  <Layer key={`node-${index}`}>
+                                    <rect
+                                      x={x}
+                                      y={y}
+                                      width={width}
+                                      height={height}
+                                      fill={payload.fill}
+                                      rx={2}
+                                    />
+                                    <text
+                                      x={x > 200 ? x + width + 8 : x - 8}
+                                      y={y + height / 2}
+                                      textAnchor={x > 200 ? 'start' : 'end'}
+                                      fontSize="10px"
+                                      fontWeight="bold"
+                                      fill="#1e293b"
+                                    >
+                                      {payload.name}
+                                    </text>
+                                    <text
+                                      x={x > 200 ? x + width + 8 : x - 8}
+                                      y={y + height / 2 + 12}
+                                      textAnchor={x > 200 ? 'start' : 'end'}
+                                      fontSize="9px"
+                                      fontWeight="500"
+                                      fill="#64748b"
+                                    >
+                                      {formatBRL(payload.value)}
+                                    </text>
+                                  </Layer>
+                                );
+                              }}
                             >
                               <Tooltip 
                                 formatter={(val) => formatBRL(val)}
                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
                               />
-                              {/* Customizing nodes to show labels */}
-                              <Layer>
-                                {sData.nodes.map((node, i) => {
-                                  const { x, y, width, height, index, name } = node;
-                                  const isRight = x > 300;
-                                  return (
-                                    <text
-                                      key={i}
-                                      x={isRight ? x + width + 10 : x - 10}
-                                      y={y + height / 2}
-                                      textAnchor={isRight ? 'start' : 'end'}
-                                      fontSize="10px"
-                                      fontWeight="bold"
-                                      fill="#475569"
-                                    >
-                                      {name}
-                                    </text>
-                                  );
-                                })}
-                              </Layer>
                             </Sankey>
                           </ResponsiveContainer>
                         );
