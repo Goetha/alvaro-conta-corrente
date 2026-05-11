@@ -2539,7 +2539,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 {/* Coluna Esquerda: Gráfico Principal */}
-                <div className="lg:col-span-5 flex flex-col gap-6">
+                <div className="lg:col-span-6 flex flex-col gap-6">
                   {/* Gráfico de Conferência */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
                     <p className="text-[10px] font-bold text-slate-900 uppercase mb-3 text-center tracking-wider">Fluxo de Resultados (Sankey)</p>
@@ -2561,7 +2561,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                             <Sankey
                               data={sData}
                               nodePadding={50}
-                              margin={{ top: 20, left: 10, right: 120, bottom: 20 }}
+                              margin={{ top: 20, left: 60, right: 120, bottom: 20 }}
                               link={{ stroke: '#cbd5e1', strokeOpacity: 0.3 }}
                               node={(props) => {
                                 const { x, y, width, height, index, payload } = props;
@@ -2612,7 +2612,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                 </div>
 
                 {/* Coluna Direita: Detalhes de Conferência e Fluxo */}
-                <div className="lg:col-span-7 flex flex-col gap-6">
+                <div className="lg:col-span-6 flex flex-col gap-6">
 
                   {/* Composição: Resultado + Custo + Outros */}
                   {(() => {
