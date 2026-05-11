@@ -2582,32 +2582,29 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                               data={[
-                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#3b82f6' },
+                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#10b981' },
                                 { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#f59e0b' },
                                 { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' }
                               ]}
-                              margin={{ top: 20, right: 10, left: -20, bottom: 5 }}
+                              margin={{ top: 10, right: 0, left: 0, bottom: 5 }}
                             >
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                               <XAxis 
                                 dataKey="name" 
-                                tick={{ fontSize: 10, fontWeight: 'bold', fill: '#64748b' }} 
                                 axisLine={false} 
                                 tickLine={false} 
-                              />
-                              <YAxis 
-                                tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} 
-                                tick={{ fontSize: 9, fill: '#94a3b8' }} 
-                                axisLine={false} 
-                                tickLine={false} 
+                                tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
+                                interval={0}
                               />
                               <Tooltip 
-                                formatter={(v) => formatBRL(Array.isArray(v) ? v[1] - v[0] : v)} 
-                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px' }} 
+                                formatter={(v) => [formatBRL(Array.isArray(v) ? v[1] - v[0] : v), 'Valor']} 
+                                labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
+                                cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
+                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
                               />
-                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={32} label={{ position: 'top', formatter: (v) => Array.isArray(v) ? formatBRL(v[1]-v[0]) : '', fontSize: 9, fontWeight: 'bold', fill: '#475569' }}>
+                              <ReferenceLine y={0} stroke="#e2e8f0" />
+                              <Bar dataKey="valor" radius={[2, 2, 2, 2]} maxBarSize={20}>
                                 {[0, 1, 2].map((i) => (
-                                  <Cell key={`cell-${i}`} fill={['#3b82f6', '#f59e0b', '#9333ea'][i]} />
+                                  <Cell key={`cell-${i}`} fill={['#10b981', '#f59e0b', '#9333ea'][i]} />
                                 ))}
                               </Bar>
                             </BarChart>
