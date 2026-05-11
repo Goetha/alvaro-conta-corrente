@@ -2573,74 +2573,87 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                         <Settings
                           size={14}
                           className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                          onClick={() => setResultadoConfigOpen(true)}
-                        />
-                      </div>
-                      <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="w-40 h-32 flex-shrink-0">
+                                       <div className="flex flex-col gap-6">
+                        {/* Gráfico Principal (Top) */}
+                        <div className="w-full h-44 -mt-2">
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                               data={[
-                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#2563eb' },
-                                { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#d97706' },
-                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#7c3aed' },
-                                { name: 'Total', valor: [0, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#0f172a' }
+                                { name: 'Res.', valor: [0, kpiResultadoDinamico], fill: '#3b82f6' },
+                                { name: 'Cap.', valor: [kpiResultadoDinamico, kpiResultadoDinamico + custoCapitalTotal], fill: '#f59e0b' },
+                                { name: 'Ajuste', valor: [kpiResultadoDinamico + custoCapitalTotal, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#9333ea' },
+                                { name: 'Total', valor: [0, kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco], fill: '#1e293b' }
                               ]}
-                              margin={{ top: 5, right: 5, left: -25, bottom: 5 }}
+                              margin={{ top: 20, right: 10, left: -20, bottom: 5 }}
                             >
-                              <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f1f5f9" />
-                              <XAxis dataKey="name" tick={{ fontSize: 8, fontWeight: 'bold', fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                              <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 8, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
-                              <Tooltip formatter={(v) => formatBRL(Array.isArray(v) ? v[1] - v[0] : v)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px' }} />
-                              <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={16}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                              <XAxis 
+                                dataKey="name" 
+                                tick={{ fontSize: 10, fontWeight: 'bold', fill: '#64748b' }} 
+                                axisLine={false} 
+                                tickLine={false} 
+                              />
+                              <YAxis 
+                                tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} 
+                                tick={{ fontSize: 9, fill: '#94a3b8' }} 
+                                axisLine={false} 
+                                tickLine={false} 
+                              />
+                              <Tooltip 
+                                formatter={(v) => formatBRL(Array.isArray(v) ? v[1] - v[0] : v)} 
+                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px' }} 
+                              />
+                              <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={32} label={{ position: 'top', formatter: (v) => Array.isArray(v) ? formatBRL(v[1]-v[0]) : '', fontSize: 9, fontWeight: 'bold', fill: '#475569' }}>
                                 {[0, 1, 2, 3].map((i) => (
-                                  <Cell key={`cell-${i}`} fill={['#2563eb', '#d97706', '#7c3aed', '#0f172a'][i]} />
+                                  <Cell key={`cell-${i}`} fill={['#3b82f6', '#f59e0b', '#9333ea', '#1e293b'][i]} />
                                 ))}
                               </Bar>
                             </BarChart>
                           </ResponsiveContainer>
                         </div>
-                        <div className="flex-1">
-                          <div className="flex flex-col gap-0.5">
+
+                        {/* Legenda de Apoio (Bottom) */}
+                        <div className="w-full">
+                          <div className="flex flex-col gap-1">
                             {/* Base: Resultado */}
                             <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
                               <div className="flex flex-col">
-                                <span className="text-[8px] font-black text-blue-500 uppercase tracking-widest leading-none mb-1">Base de Cálculo</span>
-                                <span className="text-[11px] font-black text-slate-800 uppercase tracking-tight">Resultado Líquido</span>
+                                <span className="text-[8px] font-black text-blue-500 uppercase tracking-widest leading-none mb-1">Ponto de Partida</span>
+                                <span className="text-[11px] font-black text-slate-800 uppercase tracking-tight">Resultado Líquido do Mês</span>
                               </div>
-                              <span className="text-xs font-black text-blue-700 tabular-nums">{formatBRL(kpiResultadoDinamico)}</span>
+                              {/* Valor removido conforme solicitado */}
                             </div>
 
-                            {/* Ajustes */}
-                            <div className="space-y-2.5 relative pl-3 border-l-2 border-slate-100">
+                            {/* Ajustes em Grid de 2 colunas para economizar espaço vertical */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3 pl-3 border-l-2 border-slate-100">
                               {[
                                 { label: 'Custo de Capital', val: custoCapitalTotal, color: 'text-amber-600' },
                                 { label: 'Outras Entradas', val: outrasEntradas, color: 'text-purple-600' },
                                 { label: 'Empréstimos FCO', val: emprestimoFco, color: 'text-orange-700' }
                               ].map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between group/item">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="text-[10px] font-bold text-slate-300">+</span>
-                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{item.label}</span>
-                                  </div>
-                                  <span className={`text-[10px] font-bold tabular-nums ${item.color}`}>{formatBRL(item.val)}</span>
+                                <div key={idx} className="flex flex-col group/item">
+                                  <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">+ {item.label}</span>
+                                  <span className={`text-[11px] font-black tabular-nums ${item.color}`}>{formatBRL(item.val)}</span>
                                 </div>
                               ))}
                             </div>
 
-                            {/* Totalizador */}
-                            <div className="mt-4 pt-3 border-t-2 border-slate-900/10">
-                              <div className="flex justify-between items-end">
-                                <div className="flex flex-col">
-                                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
-                                  <span className="text-[11px] font-black text-slate-900 uppercase">Montante Total</span>
-                                </div>
-                                <div className="flex flex-col items-end">
-                                  <span className="text-sm font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
-                                  <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Sincronizado</span>
-                                </div>
+                            {/* Totalizador Consolidado */}
+                            <div className="mt-4 pt-3 border-t-2 border-slate-900/10 flex justify-between items-end">
+                              <div className="flex flex-col">
+                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Consolidação Final</span>
+                                <span className="text-[12px] font-black text-slate-900 uppercase">Geração de Caixa Consolidada</span>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span className="text-lg font-black text-slate-900 tabular-nums tracking-tighter leading-none">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
+                                <span className="text-[8px] font-bold text-emerald-600 uppercase mt-1">Conferência OK</span>
                               </div>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+               </div>
                           </div>
                         </div>
                       </div>
