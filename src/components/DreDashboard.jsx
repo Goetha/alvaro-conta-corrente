@@ -2563,53 +2563,108 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   </div>
                 </div>
 
-                {/* Coluna Central: Fechamento (Diferença) */}
-                <div className="lg:col-span-3 flex flex-col gap-6">
-                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
-                    
-                    <div className="flex flex-col gap-3 mb-6">
-
-                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                        <span className="text-[9px] font-black text-purple-600 uppercase">Outras Ent.</span>
-                        <span className="text-[11px] font-black text-slate-800">{formatBRL(outrasEntradas)}</span>
+                {/* Coluna Direita: Detalhes de Conferência e Fluxo */}
+                <div className="lg:col-span-7 flex flex-col gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Fechamento */}
+                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-3 text-center tracking-wider">Fechamento</p>
+                      
+                      <div className="flex flex-col gap-3 mb-6">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                          <span className="text-[9px] font-black text-purple-600 uppercase">Outras Ent.</span>
+                          <span className="text-[11px] font-black text-slate-800">{formatBRL(outrasEntradas)}</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                          <span className="text-[9px] font-black text-amber-500 uppercase">Empréstimos</span>
+                          <span className="text-[11px] font-black text-slate-800">{formatBRL(emprestimoFco)}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-                        <span className="text-[9px] font-black text-amber-500 uppercase">Empréstimos</span>
-                        <span className="text-[11px] font-black text-slate-800">{formatBRL(emprestimoFco)}</span>
+
+                      <div className="flex-1 min-h-[140px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart 
+                            data={[
+                              { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
+                              { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }
+                            ]} 
+                            margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
+                          >
+                            <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f8fafc" />
+                            <XAxis 
+                              dataKey="name" 
+                              tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} 
+                              axisLine={false} 
+                              tickLine={false} 
+                            />
+                            <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
+                            <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
+                            <ReferenceLine y={0} stroke="#e2e8f0" />
+                            <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
+                              {[0,1].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e'][i]} />)}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
                       </div>
                     </div>
 
-                    <div className="flex-1 min-h-[140px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart 
-                          data={[
-                            { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
-                            { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }
-                          ]} 
-                          margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f8fafc" />
-                          <XAxis 
-                            dataKey="name" 
-                            tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} 
-                            axisLine={false} 
-                            tickLine={false} 
-                          />
-                          <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
-                          <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
-                          <ReferenceLine y={0} stroke="#e2e8f0" />
-                          <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
-                            {[0,1].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e'][i]} />)}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    {/* Composição: Resultado + Custo */}
+                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo</p>
+                        <Settings
+                          size={14}
+                          className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
+                          onClick={() => setResultadoConfigOpen(true)}
+                        />
+                      </div>
+                      <div className="flex flex-col md:flex-row items-center gap-6">
+                        <div className="w-24 h-24 flex-shrink-0">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                              <Pie
+                                data={[
+                                  { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
+                                  { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' }
+                                ]}
+                                innerRadius={18}
+                                outerRadius={35}
+                                paddingAngle={5}
+                                dataKey="value"
+                                stroke="none"
+                              >
+                                <Cell key="cell-0" fill="#3b82f6" />
+                                <Cell key="cell-1" fill="#f59e0b" />
+                              </Pie>
+                              <Tooltip formatter={(v) => formatBRL(v)} />
+                            </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#3b82f6' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase">Resultado</span>
+                            </div>
+                            <span className="text-xs font-black text-blue-600">{formatBRL(kpiResultadoDinamico)}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#f59e0b' }}></div>
+                              <span className="text-[9px] font-bold text-slate-500 uppercase">Custo Cap.</span>
+                            </div>
+                            <span className="text-xs font-black text-amber-600">{formatBRL(custoCapitalTotal)}</span>
+                          </div>
+                          <div className="pt-1 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-[9px] font-black text-slate-400 uppercase">Total Comp.</span>
+                            <span className="text-xs font-black text-slate-800">{formatBRL(resultadoMaisCusto)}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Coluna Direita: Gráficos Secundários e KPIs */}
-                <div className="lg:col-span-4 flex flex-col gap-6">
+
                   {/* Fluxo de Caixa Futuro */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">Fluxo de Caixa Futuro</p>
@@ -2657,62 +2712,6 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                       </div>
                     </div>
                   </div>
-
-                  {/* Composição: Resultado + Custo */}
-                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                    <div className="flex items-center justify-between mb-4">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comp.: Res. + Custo</p>
-                      <Settings
-                        size={14}
-                        className="text-slate-300 hover:text-slate-500 cursor-pointer transition-colors"
-                        onClick={() => setResultadoConfigOpen(true)}
-                      />
-                    </div>
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                      <div className="w-24 h-24 flex-shrink-0">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={[
-                                { name: 'Resultado', value: Math.max(0, kpiResultadoDinamico), fill: '#3b82f6' },
-                                { name: 'Custo Cap.', value: Math.max(0, custoCapitalTotal), fill: '#f59e0b' }
-                              ]}
-                              innerRadius={18}
-                              outerRadius={35}
-                              paddingAngle={5}
-                              dataKey="value"
-                              stroke="none"
-                            >
-                              <Cell key="cell-0" fill="#3b82f6" />
-                              <Cell key="cell-1" fill="#f59e0b" />
-                            </Pie>
-                            <Tooltip formatter={(v) => formatBRL(v)} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <div className="flex-1 w-full space-y-3">
-                        <div className="flex justify-between items-center group/kpi1">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Resultado</span>
-                          </div>
-                          <span className="text-xs font-black text-slate-800">{formatBRL(kpiResultadoDinamico)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase">Custo Cap.</span>
-                          </div>
-                          <span className="text-xs font-black text-slate-800">{formatBRL(custoCapitalTotal)}</span>
-                        </div>
-                        <div className="pt-2 border-t border-slate-100 flex justify-between items-center">
-                          <span className="text-[10px] font-black text-indigo-600 uppercase">Total Geral</span>
-                          <span className="text-sm font-black text-indigo-900">{formatBRL(resultadoMaisCusto)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
                 </div>
               </div>
 
