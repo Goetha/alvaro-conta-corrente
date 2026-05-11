@@ -2414,7 +2414,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartDataReceber} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 20, bottom: 20 }} />
+                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} reversed={true} padding={{ top: 20, bottom: 20 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
@@ -2440,7 +2440,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartDataPagar} margin={{ top: 25, right: 0, left: 0, bottom: 5 }}>
                         <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }} interval={0} />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 20, bottom: 20 }} />
+                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} reversed={true} padding={{ top: 20, bottom: 20 }} />
                         <Tooltip formatter={(val) => [formatBRL(val), 'Valor']} labelFormatter={(l) => <span className="font-black text-slate-700">{l}</span>} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} />
                         <ReferenceLine y={0} stroke="#e2e8f0" />
                         <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={20}>
@@ -2480,7 +2480,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               return name;
                             }}
                           />
-                          <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 20, bottom: 20 }} />
+                          <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} reversed={true} padding={{ top: 20, bottom: 20 }} />
                           <Tooltip
                             formatter={(val) => [formatBRL(val), 'Valor']}
                             labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2523,7 +2523,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                           tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
                           interval={0}
                         />
-                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} padding={{ top: 20, bottom: 20 }} />
+                        <YAxis hide domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]} reversed={true} padding={{ top: 20, bottom: 20 }} />
                         <Tooltip
                           formatter={(val) => [formatBRL(val), 'Valor']}
                           labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
@@ -2716,7 +2716,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsCaixa} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  reversed={true} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={2} />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
@@ -2753,7 +2753,7 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                               <BarChart data={barsOp} margin={{ top: 35, right: 10, left: 10, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" tick={{ fontSize: 7, fontWeight: 'bold' }} axisLine={false} tickLine={false} />
-                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  padding={{ top: 35, bottom: 35 }} />
+                                <YAxis hide={true} domain={[ (min) => Math.min(0, min), (max) => Math.max(0, max) ]}  reversed={true} padding={{ top: 35, bottom: 35 }} />
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
