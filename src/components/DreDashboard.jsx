@@ -2231,6 +2231,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
 
   const resultadoMaisCusto = kpiResultadoDinamico + custoCapitalTotal;
   const kpiDiferencaFinal = resultadoMaisCusto - geracaoCaixaSoma;
+  const chartDataDif = useMemo(() => {
+    return [
+      { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' }, // Indigo
+      { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' }    // Teal
+    ];
+  }, [resultadoMaisCusto, geracaoCaixaSoma]);
 
   const [systemKpiOpsTksz, setSystemKpiOpsTksz] = useState({ difFinal: 'soma', outrasEntradas: 'subtrai', emprestimoFco: 'subtrai' });
 
@@ -2436,15 +2442,45 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                   </div>
                 </div>
 
-                {/* Diferença */}
-                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center">
-                      <Activity size={20} className="text-orange-600" />
+                {/* Diferença (Agora como Gráfico de Comparação) */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col relative group hover:border-orange-300 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                        <Activity size={16} className="text-orange-600" />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Diferença</p>
+                        <p className="text-base font-black text-slate-800 tracking-tight">{formatBRL(kpiDiferencaFinal)}</p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Diferença</p>
-                  <p className="text-lg font-black text-slate-800 tracking-tight">{formatBRL(kpiDiferencaFinal)}</p>
+                  
+                  <div className="flex-1 mt-2 min-h-[80px] h-20 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartDataDif} margin={{ top: 0, right: 0, left: 0, bottom: 5 }}>
+                        <XAxis 
+                          dataKey="name" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fontSize: 7, fontWeight: 'black', fill: '#94a3b8' }}
+                          interval={0}
+                        />
+                        <Tooltip 
+                          formatter={(val) => [formatBRL(val), 'Valor']} 
+                          labelFormatter={(label) => <span className="font-black text-slate-700">{label}</span>}
+                          cursor={{ fill: 'rgba(241,245,249,0.5)' }} 
+                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }} 
+                        />
+                        <ReferenceLine y={0} stroke="#e2e8f0" />
+                        <Bar dataKey="valor" radius={[2, 2, 0, 0]} maxBarSize={20}>
+                          {chartDataDif.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
 
@@ -2499,19 +2535,26 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart 
                           data={[
+                            { name: 'Livro', valor: resultadoMaisCusto, fill: '#6366f1' },
+                            { name: 'Caixa', valor: geracaoCaixaSoma, fill: '#0f766e' },
                             { name: 'Dif.', valor: kpiDiferencaFinal, fill: '#ea580c' },
                             { name: 'O.E.', valor: outrasEntradas, fill: '#8b5cf6' },
                             { name: 'Emp.', valor: emprestimoFco, fill: '#f59e0b' }
                           ]} 
-                          margin={{ top: 0, right: 0, left: -25, bottom: 0 }}
+                          margin={{ top: 0, right: 0, left: -25, bottom: 5 }}
                         >
                           <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#f8fafc" />
-                          <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                          <XAxis 
+                            dataKey="name" 
+                            tick={{ fontSize: 9, fontWeight: 'bold', fill: '#94a3b8' }} 
+                            axisLine={false} 
+                            tickLine={false} 
+                          />
                           <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#cbd5e1' }} axisLine={false} tickLine={false} />
                           <Tooltip formatter={(val) => formatBRL(val)} cursor={{ fill: 'rgba(241,245,249,0.5)' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }} />
                           <ReferenceLine y={0} stroke="#e2e8f0" />
                           <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={24}>
-                            {[0,1,2].map((i) => <Cell key={`cell-${i}`} fill={['#ea580c', '#8b5cf6', '#f59e0b'][i]} />)}
+                            {[0,1,2,3,4].map((i) => <Cell key={`cell-${i}`} fill={['#6366f1', '#0f766e', '#ea580c', '#8b5cf6', '#f59e0b'][i]} />)}
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
