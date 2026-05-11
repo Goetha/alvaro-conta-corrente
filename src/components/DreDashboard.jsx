@@ -2712,6 +2712,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="top" 
+                                    formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                                    style={{ fontSize: '7px', fontWeight: 'bold', fill: '#64748b' }} 
+                                  />
                                   {barsCaixa.map((entry, index) => (
                                     <Cell 
                                       key={index} 
@@ -2748,6 +2754,12 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                 <Tooltip formatter={(v) => formatBRL(v)} contentStyle={{ fontSize: '10px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                                 <ReferenceLine y={0} stroke="#cbd5e1" />
                                 <Bar dataKey="valor" radius={[3, 3, 3, 3]} maxBarSize={30}>
+                                  <LabelList 
+                                    dataKey="valor" 
+                                    position="top" 
+                                    formatter={(v) => `R$ ${(v / 1000).toFixed(1)}k`} 
+                                    style={{ fontSize: '7px', fontWeight: 'bold', fill: '#64748b' }} 
+                                  />
                                   {barsOp.map((entry, index) => (
                                     <Cell 
                                       key={index} 
