@@ -2602,38 +2602,39 @@ const totalReceitasDRE = displayReceitasRows.reduce((acc, r) => acc + (r.valor |
                             </RadialBarChart>
                           </ResponsiveContainer>
                         </div>
-                        <div className="flex-1 space-y-1.5">
-                          <div className="flex justify-between items-center group/item">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#3b82f6' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Resultado</span>
+                        <div className="flex-1 space-y-3">
+                          {[
+                            { label: 'Resultado', val: kpiResultadoDinamico, color: '#2563eb', icon: TrendingUp, textCol: 'text-blue-700' },
+                            { label: 'Custo Cap.', val: custoCapitalTotal, color: '#d97706', icon: Activity, textCol: 'text-amber-700' },
+                            { label: 'Outras Ent.', val: outrasEntradas, color: '#7c3aed', icon: Plus, textCol: 'text-purple-700' },
+                            { label: 'Empréstimos', val: emprestimoFco, color: '#b45309', icon: DollarSign, textCol: 'text-orange-800' }
+                          ].map((item, idx) => {
+                            const total = kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco;
+                            const perc = total > 0 ? Math.round((item.val / total) * 100) : 0;
+                            return (
+                              <div key={idx} className="flex items-center justify-between group/item">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-7 h-7 rounded-lg flex items-center justify-center transition-all shadow-sm" style={{ backgroundColor: `${item.color}15` }}>
+                                    <item.icon size={14} style={{ color: item.color }} />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-[10px] font-bold text-slate-700 uppercase tracking-tight leading-none">{item.label}</span>
+                                    <span className="text-[8px] font-medium text-slate-400 uppercase tracking-tighter">{perc}% do total</span>
+                                  </div>
+                                </div>
+                                <span className={`text-[11px] font-black tabular-nums ${item.textCol}`}>{formatBRL(item.val)}</span>
+                              </div>
+                            );
+                          })}
+                          
+                          <div className="pt-3 mt-2 border-t border-slate-100">
+                            <div className="flex justify-between items-end">
+                              <div className="flex flex-col">
+                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Montante Consolidado</span>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase">Total Comp.</span>
+                              </div>
+                              <span className="text-base font-black text-slate-900 tabular-nums tracking-tighter">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
                             </div>
-                            <span className="text-xs font-black text-blue-600 tabular-nums">{formatBRL(kpiResultadoDinamico)}</span>
-                          </div>
-                          <div className="flex justify-between items-center group/item">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#f59e0b' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Custo Cap.</span>
-                            </div>
-                            <span className="text-xs font-black text-amber-600 tabular-nums">{formatBRL(custoCapitalTotal)}</span>
-                          </div>
-                          <div className="flex justify-between items-center group/item">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#9333ea' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Outras Ent.</span>
-                            </div>
-                            <span className="text-xs font-black text-purple-600 tabular-nums">{formatBRL(outrasEntradas)}</span>
-                          </div>
-                          <div className="flex justify-between items-center group/item">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: '#d97706' }}></div>
-                              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Empréstimos</span>
-                            </div>
-                            <span className="text-xs font-black text-amber-700 tabular-nums">{formatBRL(emprestimoFco)}</span>
-                          </div>
-                          <div className="pt-2 mt-1 border-t border-slate-100 flex justify-between items-center bg-slate-50/50 -mx-1 px-1 rounded-sm">
-                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Total Geral</span>
-                            <span className="text-sm font-black text-slate-900 tabular-nums">{formatBRL(kpiResultadoDinamico + custoCapitalTotal + outrasEntradas + emprestimoFco)}</span>
                           </div>
                         </div>
                       </div>
