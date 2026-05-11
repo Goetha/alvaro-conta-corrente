@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, RadialBarChart, RadialBar, LabelList, Sankey } from 'recharts';
 import { Plus, MoreVertical, Edit, Copy, Trash2, ChevronLeft, ChevronRight, DollarSign, TrendingUp, TrendingDown, Activity, GripVertical, ArrowUpDown, Settings, X, CheckCircle, Filter, Search, Minus, HelpCircle, Calendar, AlertTriangle } from 'lucide-react';
 import { useLancamentos, useCreateLancamento, useUpdateLancamento, useDeleteLancamento } from '@/hooks/useLancamentos';
 import { useCaixa, useCreateCaixa, useUpdateCaixa, useDeleteCaixa } from '@/hooks/useCaixa';
@@ -2542,22 +2542,37 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                 <div className="lg:col-span-5 flex flex-col gap-6">
                   {/* Gráfico de Conferência */}
                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                    <p className="text-[10px] font-bold text-slate-900 uppercase mb-3 text-center tracking-wider">Cascata de Resultados</p>
-                    <div className="flex-1 min-h-[250px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                          <XAxis dataKey="name" tick={{ fontSize: 9, fontWeight: 'bold', fill: '#64748b' }} axisLine={false} tickLine={false} />
-                          <YAxis tickFormatter={(val) => `R$${(val / 1000).toFixed(0)}k`} tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                          <Tooltip cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }} formatter={(val) => formatBRL(val)} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                          <ReferenceLine y={0} stroke="#cbd5e1" />
-                          <Bar dataKey="valor" radius={[4, 4, 4, 4]} maxBarSize={30}>
-                            {chartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.fill} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <p className="text-[10px] font-bold text-slate-900 uppercase mb-3 text-center tracking-wider">Fluxo de Resultados (Sankey)</p>
+                    <div className="flex-1 min-h-[250px] py-4">
+                      {(() => {
+                        const sData = {
+                          nodes: [
+                            { name: 'Receita', fill: '#10b981' },
+                            { name: 'Despesas', fill: '#f43f5e' },
+                            { name: 'G. Caixa', fill: '#0d9488' }
+                          ],
+                          links: [
+                            { source: 0, target: 1, value: Math.abs(kpiDespesasDinamico) },
+                            { source: 0, target: 2, value: Math.max(0, geracaoCaixaSoma) }
+                          ]
+                        };
+                        return (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <Sankey
+                              data={sData}
+                              node={{ stroke: '#fff', strokeWidth: 2 }}
+                              link={{ stroke: '#f1f5f9' }}
+                              margin={{ top: 20, left: 10, right: 10, bottom: 20 }}
+                              nodePadding={50}
+                            >
+                              <Tooltip 
+                                formatter={(val) => formatBRL(val)}
+                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }}
+                              />
+                            </Sankey>
+                          </ResponsiveContainer>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
