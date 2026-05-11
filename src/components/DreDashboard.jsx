@@ -2547,24 +2547,39 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                       {(() => {
                         const sData = {
                           nodes: [
-                            { name: 'Receita', fill: '#10b981' },
+                            { name: 'Receita (Placas)', fill: '#10b981' },
+                            { name: 'Venda Bens', fill: '#34d399' },
+                            { name: 'O. Entradas', fill: '#6ee7b7' },
+                            { name: 'Empréstimos', fill: '#a7f3d0' },
+                            { name: 'Consolidação', fill: '#94a3b8' }, // Nó central
                             { name: 'Despesas', fill: '#f43f5e' },
+                            { name: 'D. Diesel', fill: '#fb7185' },
+                            { name: 'C. Capital', fill: '#facc15' },
                             { name: 'G. Caixa', fill: '#0d9488' }
                           ],
                           links: [
-                            { source: 0, target: 1, value: totalDespesasDRE },
-                            { source: 0, target: 2, value: totalReceitasDRE - totalDespesasDRE }
+                            // Entradas para o Centro
+                            { source: 0, target: 4, value: Math.max(1, totalReceitasDRE) },
+                            { source: 1, target: 4, value: Math.max(1, vendaBensCod6) },
+                            { source: 2, target: 4, value: Math.max(1, outrasEntradas) },
+                            { source: 3, target: 4, value: Math.max(1, emprestimoFco) },
+                            // Centro para Saídas e Saldo
+                            { source: 4, target: 5, value: Math.max(1, Math.abs(kpiDespesasDinamico)) },
+                            { source: 4, target: 6, value: Math.max(1, Math.abs(descontoDieselManual)) },
+                            { source: 4, target: 7, value: Math.max(1, Math.abs(custoCapitalTotal)) },
+                            { source: 4, target: 8, value: Math.max(1, geracaoCaixaSoma) }
                           ]
                         };
                         return (
                           <ResponsiveContainer width="100%" height="100%">
                             <Sankey
                               data={sData}
-                              nodePadding={50}
+                              nodePadding={30}
                               margin={{ top: 20, left: 100, right: 140, bottom: 20 }}
                               link={{ stroke: '#cbd5e1', strokeOpacity: 0.3 }}
                               node={(props) => {
                                 const { x, y, width, height, index, payload } = props;
+                                const isRight = x > 300;
                                 return (
                                   <Layer key={`node-${index}`}>
                                     <rect
@@ -2576,20 +2591,20 @@ function ResultadoView({ receber = [], lancamentos = [], caixa = [], diesel = []
                                       rx={2}
                                     />
                                     <text
-                                      x={x > 200 ? x + width + 8 : x - 8}
+                                      x={isRight ? x + width + 8 : x - 8}
                                       y={y + height / 2}
-                                      textAnchor={x > 200 ? 'start' : 'end'}
-                                      fontSize="10px"
+                                      textAnchor={isRight ? 'start' : 'end'}
+                                      fontSize="9px"
                                       fontWeight="bold"
                                       fill="#1e293b"
                                     >
                                       {payload.name}
                                     </text>
                                     <text
-                                      x={x > 200 ? x + width + 8 : x - 8}
-                                      y={y + height / 2 + 12}
-                                      textAnchor={x > 200 ? 'start' : 'end'}
-                                      fontSize="9px"
+                                      x={isRight ? x + width + 8 : x - 8}
+                                      y={y + height / 2 + 10}
+                                      textAnchor={isRight ? 'start' : 'end'}
+                                      fontSize="8px"
                                       fontWeight="500"
                                       fill="#64748b"
                                     >
